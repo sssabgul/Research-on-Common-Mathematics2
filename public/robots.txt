@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gongsu2-tamgu.netlify.app/sitemap.xml
