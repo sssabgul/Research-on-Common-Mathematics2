@@ -108,19 +108,22 @@ export type TopicFilter = {
   query?: string;
   levels?: readonly Level[];
   kinds?: readonly TopicKind[];
+  subunitIds?: readonly string[];
 };
 
 export function searchTopics({
   query = '',
   levels = [],
   kinds = [],
+  subunitIds = [],
 }: TopicFilter): TopicEntry[] {
   const needle = normalize(query.trim());
 
-  return searchIndex.filter(({ haystack, topic }) => {
+  return searchIndex.filter(({ haystack, subunit, topic }) => {
     if (needle && !haystack.includes(needle)) return false;
     if (levels.length > 0 && !levels.includes(topic.level)) return false;
     if (kinds.length > 0 && !kinds.includes(topic.kind)) return false;
+    if (subunitIds.length > 0 && !subunitIds.includes(subunit.id)) return false;
     return true;
   });
 }

@@ -57,13 +57,10 @@ export default function Home() {
           생기부로 이어지는 나만의 수학 탐구
         </p>
         <h1 className="max-w-3xl text-[clamp(2rem,6vw,4rem)] leading-[1.08] font-extrabold tracking-[-0.055em] text-[#111113]">
-          작은 궁금증에서
-          <br />
           탐구 주제를 찾아보세요.
         </h1>
         <p className="mt-5 max-w-2xl text-[1.05rem] leading-8 text-[#636366] sm:text-[1.15rem]">
-          대단원과 소단원을 고르면 고1 수준에서 직접 계산하고 관찰할 수 있는
-          주제와 탐구 방향, 진로·교과 연계를 함께 볼 수 있어요.
+          단원별 탐구 주제를 찾아보세요.
         </p>
         <ul
           className="mt-6 flex list-none flex-wrap gap-2.5"
