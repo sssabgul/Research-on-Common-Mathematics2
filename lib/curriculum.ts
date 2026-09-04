@@ -1,15 +1,58 @@
+/**
+ * 공통수학2 탐구 주제 데이터.
+ *
+ * 조회 헬퍼와 파생 통계는 `lib/curriculum-utils.ts`에 있다.
+ * 이 파일은 데이터와 그 타입만 담는다.
+ */
+
+/** 난이도. 화면 배지이자 검색 필터의 패싯. */
+export const LEVELS = [
+  '쉬움',
+  '쉬움–보통',
+  '보통',
+  '보통–도전',
+  '도전',
+] as const;
+export type Level = (typeof LEVELS)[number];
+
+/**
+ * 탐구 유형 분류. 검색 필터의 패싯으로 쓴다.
+ * `style`은 주제마다 거의 고유해(36개 중 35종) 필터로 쓸 수 없어 따로 둔다.
+ */
+export const TOPIC_KINDS = [
+  '실험·측정',
+  '코딩·시뮬레이션',
+  '자료·조사',
+  '증명·논증',
+  '설계·모델링',
+  '융합 탐구',
+] as const;
+export type TopicKind = (typeof TOPIC_KINDS)[number];
+
+/** 대단원 식별자. 라우트 첫 번째 세그먼트이자 아이콘·색상 맵의 키. */
+export type UnitId = 'geometry' | 'logic' | 'functions';
+
+/** 대단원별 색조. 실제 색값은 `lib/tone.ts`가 갖는다. */
+export type Tone = 'blue' | 'purple' | 'orange';
+
 export type Topic = {
+  /** 소단원 안에서 유일. 앵커 링크(`#id`)와 React key에 쓴다. */
+  id: string;
   title: string;
   summary: string;
   question: string;
   method: string;
   career: string;
   curriculum: string;
-  level: string;
+  level: Level;
+  /** 화면에 그대로 보여주는 유형 라벨. 필터에는 쓰지 않는다. */
   style: string;
+  /** 필터용 분류. */
+  kind: TopicKind;
 };
 
 export type Subunit = {
+  /** 라우트 두 번째 세그먼트. 사이트 전체에서 유일해야 한다. */
   id: string;
   label: string;
   official: string;
@@ -20,12 +63,12 @@ export type Subunit = {
 };
 
 export type CurriculumUnit = {
-  id: string;
+  id: UnitId;
   roman: string;
   title: string;
   shortTitle: string;
   description: string;
-  tone: 'blue' | 'purple' | 'orange';
+  tone: Tone;
   subunits: Subunit[];
 };
 
@@ -48,6 +91,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         note: '학생에게 익숙한 소단원명으로 표시했으며, 교육과정의 공식 내용 요소는 ‘평면좌표’입니다.',
         topics: [
           {
+            id: 'commute-hub',
             title: '두 지역 사이 통학 거점은 어디가 좋을까?',
             summary:
               '두 지역의 이용 학생 수를 내분비로 삼아 가상의 통학 거점 위치를 설계합니다.',
@@ -59,8 +103,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '내분점의 좌표 · 비와 비례 · 좌표평면',
             level: '보통',
             style: '생활 문제형',
+            kind: '설계·모델링',
           },
           {
+            id: 'game-motion',
             title: '게임 캐릭터의 자연스러운 이동 만들기',
             summary:
               '시작점과 도착점 사이의 내분점을 연속으로 계산해 캐릭터 이동 장면을 만듭니다.',
@@ -72,8 +118,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '내분점의 좌표 · 좌표 변화 · 비례 관계',
             level: '보통',
             style: '코딩형',
+            kind: '코딩·시뮬레이션',
           },
           {
+            id: 'centroid',
             title: '삼각형의 무게중심은 왜 2:1로 나눌까?',
             summary:
               '무게중심 좌표를 내분점 공식으로 유도하고 종이 모형의 균형점과 비교합니다.',
@@ -85,8 +133,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '중점 · 2:1 내분 · 직선의 교점 · 좌표의 평균',
             level: '보통',
             style: '증명·실험형',
+            kind: '증명·논증',
           },
           {
+            id: 'bezier',
             title: '내분을 반복하면 곡선이 만들어질까?',
             summary:
               '같은 비율의 내분을 반복해 글꼴과 그래픽에 쓰이는 베지어 곡선의 원리를 살펴봅니다.',
@@ -98,6 +148,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '내분점의 반복 적용 · 좌표의 가중평균',
             level: '도전',
             style: '디자인 융합형',
+            kind: '융합 탐구',
           },
         ],
       },
@@ -109,6 +160,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '기울기와 직선의 관계를 공간 설계, 이동 경로와 데이터 문제에 연결합니다.',
         topics: [
           {
+            id: 'ramp-slope',
             title: '학교 경사로를 기울기로 분석하기',
             summary:
               '경사로의 높이와 수평거리를 측정해 직선의 방정식으로 나타내고 서로 비교합니다.',
@@ -119,8 +171,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '두 점을 지나는 직선 · 기울기 · 직선의 방정식',
             level: '쉬움–보통',
             style: '현장 측정형',
+            kind: '실험·측정',
           },
           {
+            id: 'perpendicular-bisector',
             title: '두 시설에서 같은 거리인 경계선 찾기',
             summary:
               '두 시설까지의 거리가 같은 지점들이 왜 직선을 이루는지 좌표로 증명합니다.',
@@ -131,8 +185,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '직선의 방정식 · 수직이등분선 · 두 점 사이의 거리',
             level: '보통',
             style: '증명·모델링형',
+            kind: '증명·논증',
           },
           {
+            id: 'path-collision',
             title: '경로가 교차하면 반드시 충돌할까?',
             summary:
               '두 이동 경로의 교점과 그 지점에 도착하는 시간을 구분해 교통 상황을 분석합니다.',
@@ -143,8 +199,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '두 직선의 교점 · 연립방정식 · 두 점 사이의 거리',
             level: '보통–도전',
             style: '융합 모델링형',
+            kind: '설계·모델링',
           },
           {
+            id: 'line-fitting',
             title: '사진 속 모서리를 가장 잘 나타내는 직선',
             summary:
               '사진에서 얻은 여러 좌표를 하나의 직선으로 근사하고 후보별 오차를 비교합니다.',
@@ -155,6 +213,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '기울기와 절편 · 직선의 방정식 · 좌표 대입',
             level: '도전',
             style: '데이터형',
+            kind: '자료·조사',
           },
         ],
       },
@@ -166,6 +225,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '중심과 반지름으로 표현되는 범위를 위치 기술과 공학 문제에 적용합니다.',
         topics: [
           {
+            id: 'geofence',
             title: '스마트폰 위치 알림의 지오펜스',
             summary: '특정 장소로부터 일정 거리 안에 들어왔는지를 원의 방정식으로 판정합니다.',
             question: '알림 반경이 달라질 때 포함되는 위치와 경계는 어떻게 바뀔까?',
@@ -175,8 +235,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '원의 방정식 · 점과 원의 위치 관계 · 거리 공식',
             level: '쉬움–보통',
             style: '생활 기술형',
+            kind: '설계·모델링',
           },
           {
+            id: 'epicenter',
             title: '세 관측소로 지진의 진앙 찾기',
             summary:
               '관측소에서 진앙까지의 추정 거리를 반지름으로 하는 세 원의 공통점을 찾습니다.',
@@ -187,8 +249,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '원의 방정식 · 원의 교점 · 연립방정식',
             level: '도전',
             style: '과학 융합형',
+            kind: '융합 탐구',
           },
           {
+            id: 'wifi-coverage',
             title: '와이파이 공유기와 음영 지역',
             summary:
               '공유기의 이상적인 도달 범위를 원으로 단순화해 겹치는 곳과 빈 곳을 분석합니다.',
@@ -199,8 +263,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '원의 내부와 외부 · 두 원의 위치 관계 · 중심 사이 거리',
             level: '보통',
             style: '모델링·실험형',
+            kind: '설계·모델링',
           },
           {
+            id: 'circle-collision',
             title: '게임 속 원형 캐릭터의 충돌 판정',
             summary:
               '두 캐릭터를 원으로 나타내고 중심 거리와 반지름으로 충돌 여부를 판단합니다.',
@@ -211,6 +277,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '두 원의 위치 관계 · 중심 사이 거리 · 원의 방정식',
             level: '보통',
             style: '코딩형',
+            kind: '코딩·시뮬레이션',
           },
         ],
       },
@@ -222,6 +289,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '평행이동과 대칭이동을 화면, 문양, 지도와 로봇의 좌표 변화로 관찰합니다.',
         topics: [
           {
+            id: 'drag-translation',
             title: '스마트폰 화면에서 스티커를 끌어 옮기는 원리',
             summary: '화면 속 도형을 끌 때 모든 점에 같은 이동량이 더해지는 과정을 탐구합니다.',
             question: '손가락의 이동량은 스티커를 이루는 각 점의 좌표를 어떻게 바꿀까?',
@@ -231,8 +299,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '평행이동 · 좌표 변화 · 이동 전후의 방정식',
             level: '쉬움–보통',
             style: '디지털 생활형',
+            kind: '설계·모델링',
           },
           {
+            id: 'mirror-symmetry',
             title: '미러 모드 이미지의 대칭이동',
             summary: '비대칭 그림과 문자가 축에 대해 대칭일 때 좌표와 방향 변화를 조사합니다.',
             question: '카메라 미러 화면과 저장된 사진은 왜 다르게 보일 수 있을까?',
@@ -242,8 +312,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '축에 대한 대칭이동 · 원점 대칭 · 좌표 변화',
             level: '쉬움–보통',
             style: '관찰형',
+            kind: '실험·측정',
           },
           {
+            id: 'traditional-pattern',
             title: '전통 문양 속 반복과 대칭',
             summary: '반복 문양의 기본 조각과 이동 규칙을 좌표로 분석하고 새 패턴을 설계합니다.',
             question: '하나의 기본 조각을 어떤 이동 규칙으로 반복하면 전체 문양이 만들어질까?',
@@ -253,8 +325,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '평행이동 · 대칭이동 · 이동에서 보존되는 성질',
             level: '보통',
             style: '예술 융합형',
+            kind: '융합 탐구',
           },
           {
+            id: 'transform-order',
             title: '이동과 대칭의 순서를 바꾸면?',
             summary:
               '평행이동과 대칭이동을 적용하는 순서에 따라 최종 도형이 달라지는 조건을 찾습니다.',
@@ -265,6 +339,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '평행이동과 대칭이동의 합성 · 좌표 변화',
             level: '도전',
             style: '추론·증명형',
+            kind: '증명·논증',
           },
         ],
       },
@@ -286,6 +361,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '명확한 기준으로 대상을 분류하고 집합 사이의 관계와 연산을 현실 문제에 적용합니다.',
         topics: [
           {
+            id: 'taste-recommendation',
             title: '우리 반 취향으로 추천 규칙 만들기',
             summary:
               '익명 선호 자료를 집합으로 표현해 공통 취향과 새로운 추천 대상을 찾습니다.',
@@ -296,8 +372,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '집합의 표현 · 포함관계 · 집합의 연산 · 벤 다이어그램',
             level: '보통',
             style: '설문·데이터형',
+            kind: '자료·조사',
           },
           {
+            id: 'allergy-filter',
             title: '식품 알레르기 정보를 집합으로 분류하기',
             summary:
               '메뉴의 성분과 피해야 할 성분을 집합으로 나타내 안전 후보를 분류하는 모형을 만듭니다.',
@@ -308,8 +386,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '전체집합과 여집합 · 교집합 · 합집합 · 집합 법칙',
             level: '쉬움–보통',
             style: '보건 융합형',
+            kind: '융합 탐구',
           },
           {
+            id: 'access-permission',
             title: '온라인 공유폴더의 접근 권한 설계',
             summary:
               '학생, 모둠장과 교사의 파일 접근 권한을 집합으로 표현해 불필요한 권한을 찾습니다.',
@@ -320,8 +400,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '부분집합 · 포함관계 · 교집합 · 차집합',
             level: '보통',
             style: '알고리즘형',
+            kind: '설계·모델링',
           },
           {
+            id: 'bus-transfer',
             title: '버스 노선의 환승 지점 찾기',
             summary:
               '노선별 정류장을 집합으로 나타내 환승 가능 지점과 전체 접근 범위를 비교합니다.',
@@ -332,6 +414,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '원소나열법 · 교집합 · 합집합 · 여러 집합의 관계',
             level: '보통',
             style: '지역 자료형',
+            kind: '자료·조사',
           },
         ],
       },
@@ -343,6 +426,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '참과 거짓, 역과 대우, 필요·충분조건과 증명법으로 말과 규칙의 논리를 검토합니다.',
         topics: [
           {
+            id: 'ad-quantifiers',
             title: '광고 속 “모든”과 “어떤” 검증하기',
             summary:
               '광고나 기사 문장의 전칭·존재 표현을 구분하고 반례 또는 사례로 판단합니다.',
@@ -353,8 +437,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '명제와 조건 · 모든과 어떤을 포함한 명제 · 반례',
             level: '쉬움',
             style: '미디어 리터러시',
+            kind: '증명·논증',
           },
           {
+            id: 'club-criteria',
             title: '동아리 선발 규정의 필요·충분조건',
             summary: '가상의 선발 규정을 명제로 바꾸어 실제 의도를 정확하게 나타내는지 검토합니다.',
             question: '규정에 필요한 조건과 그것만으로 충분한 조건을 어떻게 구분할까?',
@@ -364,8 +450,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '명제의 역과 대우 · 필요조건 · 충분조건',
             level: '쉬움–보통',
             style: '규칙 설계형',
+            kind: '설계·모델링',
           },
           {
+            id: 'password-logic',
             title: '비밀번호 규칙을 논리적으로 설계하기',
             summary:
               '여러 조건을 그리고·또는·아니다로 표현하고 규칙 변경에 따른 판정 차이를 찾습니다.',
@@ -376,8 +464,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '조건과 명제의 참·거짓 · 필요·충분조건 · 조건의 결합',
             level: '보통',
             style: '논리·코딩형',
+            kind: '코딩·시뮬레이션',
           },
           {
+            id: 'even-square-proof',
             title: '제곱이 짝수이면 원래 수도 짝수일까?',
             summary: '직접 증명하기 어려운 명제를 대우로 바꾸면 왜 쉬워지는지 탐구합니다.',
             question: '원래 명제 대신 “홀수의 제곱은 홀수”를 증명해도 되는 이유는 무엇일까?',
@@ -387,8 +477,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '역과 대우 · 대우를 이용한 증명',
             level: '보통',
             style: '증명형',
+            kind: '증명·논증',
           },
           {
+            id: 'triangle-inequality',
             title: '복도 이동으로 절대부등식 이해하기',
             summary:
               '수직선 위 이동 거리로 삼각부등식의 의미와 등호가 성립하는 조건을 설명합니다.',
@@ -399,6 +491,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '절대부등식 · 거리 해석 · 경우 나누기',
             level: '보통',
             style: '기하적 증명형',
+            kind: '증명·논증',
           },
         ],
       },
@@ -420,6 +513,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '대응 관계, 합성함수와 역함수를 데이터 처리와 생활 속 규칙에서 찾아봅니다.',
         topics: [
           {
+            id: 'data-key-function',
             title: '정보표에서 함수와 고유키 찾기',
             summary:
               '가상 학생 데이터의 여러 대응 관계를 함수인지 판정하고 역함수가 존재하는 조건을 찾습니다.',
@@ -430,8 +524,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '함수의 개념 · 정의역·공역·치역 · 역함수의 존재 조건',
             level: '쉬움–보통',
             style: '데이터 판정형',
+            kind: '자료·조사',
           },
           {
+            id: 'parking-fee',
             title: '주차요금은 시간의 함수일까?',
             summary:
               '시간에 따라 단계적으로 변하는 가상 주차요금을 표와 그래프로 나타냅니다.',
@@ -442,8 +538,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '함수의 뜻 · 정의역과 치역 · 함수의 그래프',
             level: '보통',
             style: '생활 그래프형',
+            kind: '설계·모델링',
           },
           {
+            id: 'discount-shipping',
             title: '할인과 배송비는 어느 순서일까?',
             summary:
               '상품 가격 처리 과정을 함수로 만들고 합성 순서에 따라 결과가 달라지는지 조사합니다.',
@@ -454,8 +552,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '함수의 합성 · 합성 순서 · 합성 가능 조건',
             level: '쉬움–보통',
             style: '경제·IT 융합형',
+            kind: '융합 탐구',
           },
           {
+            id: 'photo-filter',
             title: '사진 필터의 순서를 바꾸면?',
             summary:
               '밝기와 대비 조절을 함수로 표현해 합성 순서와 정보 손실을 분석합니다.',
@@ -466,8 +566,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '합성함수 · 합성 순서 · 일대일 대응 · 역함수',
             level: '보통',
             style: '디자인·IT형',
+            kind: '코딩·시뮬레이션',
           },
           {
+            id: 'cipher-inverse',
             title: '암호화와 복호화를 역함수로 표현하기',
             summary: '문자 치환 규칙을 일대일 대응으로 만들어 암호화 함수와 복호화 함수를 구성합니다.',
             question: '서로 다른 두 문자를 같은 문자로 바꾸면 왜 완전한 복호화가 불가능할까?',
@@ -477,6 +579,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '함수의 대응 · 합성함수 · 역함수와 존재 조건',
             level: '보통',
             style: '규칙 제작형',
+            kind: '설계·모델링',
           },
         ],
       },
@@ -488,6 +591,7 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro: '분수식과 제곱근으로 나타나는 관계를 비용, 속도, 빛과 공간 문제에서 해석합니다.',
         topics: [
           {
+            id: 'group-order-cost',
             title: '공동 주문 인원과 1인당 비용',
             summary:
               '고정 배송비와 개인별 비용이 있는 공동 주문을 유리함수로 모델링합니다.',
@@ -498,8 +602,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '유리함수의 그래프 · 점근선 · 정의역과 치역',
             level: '쉬움',
             style: '경제 모델링형',
+            kind: '설계·모델링',
           },
           {
+            id: 'average-speed',
             title: '왕복 평균속도는 두 속도의 평균일까?',
             summary:
               '같은 거리를 서로 다른 속도로 왕복할 때 평균속도를 유리함수로 나타냅니다.',
@@ -510,8 +616,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '유리함수의 식 변형 · 그래프 · 점근선',
             level: '보통',
             style: '오개념 탐구형',
+            kind: '증명·논증',
           },
           {
+            id: 'convex-lens',
             title: '볼록렌즈의 초점과 유리함수',
             summary:
               '렌즈 공식에서 물체 거리와 상의 거리 관계를 유리함수로 바꾸어 봅니다.',
@@ -522,8 +630,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '유리함수의 표준형 · 그래프의 평행이동 · 점근선',
             level: '도전',
             style: '물리 융합형',
+            kind: '융합 탐구',
           },
           {
+            id: 'pendulum',
             title: '진자의 길이와 왕복 시간',
             summary: '진자의 길이가 길어질 때 주기가 어떻게 변하는지 제곱근 함수로 조사합니다.',
             question: '진자의 길이를 4배로 하면 왕복 시간은 몇 배가 될까?',
@@ -533,8 +643,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '무리함수의 그래프 · 정의역과 치역 · 제곱근 관계',
             level: '보통',
             style: '실험형',
+            kind: '실험·측정',
           },
           {
+            id: 'service-radius',
             title: '원형 생활권의 면적과 서비스 반경',
             summary:
               '서비스 면적을 원으로 가정해 면적과 반경의 관계를 무리함수로 나타냅니다.',
@@ -545,8 +657,10 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '무리함수의 그래프와 성질 · 정의역 · 변화량',
             level: '쉬움–보통',
             style: '공간 모델링형',
+            kind: '설계·모델링',
           },
           {
+            id: 'horizon-distance',
             title: '높이 올라갈수록 지평선은 얼마나 멀어질까?',
             summary:
               '관측 높이와 지평선까지의 거리를 제곱근 함수로 근사해 분석합니다.',
@@ -557,6 +671,7 @@ export const curriculumUnits: CurriculumUnit[] = [
             curriculum: '무리함수 · 정의역 · 근사와 그래프 해석',
             level: '도전',
             style: '지구과학 융합형',
+            kind: '융합 탐구',
           },
         ],
       },
@@ -564,8 +679,3 @@ export const curriculumUnits: CurriculumUnit[] = [
   },
 ];
 
-export const totalTopicCount = curriculumUnits.reduce(
-  (unitTotal, unit) =>
-    unitTotal + unit.subunits.reduce((sum, subunit) => sum + subunit.topics.length, 0),
-  0,
-);
