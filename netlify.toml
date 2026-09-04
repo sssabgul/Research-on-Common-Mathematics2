@@ -1,14 +1,14 @@
 [build]
-command = "npm run build"
-publish = "dist/client"
+  command = "npm run build"
+  publish = "dist/client"
 
 [build.environment]
-NODE_VERSION = "22.14.0"
+  NODE_VERSION = "22.14.0"
 
 [[headers]]
-for = "/*"
+  for = "/*"
 
-[headers.values]
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
-X-Frame-Options = "SAMEORIGIN"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
