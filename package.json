@@ -10,6 +10,7 @@
     "build": "vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "check": "node scripts/check-curriculum.mjs",
+    "gen:seo": "node scripts/generate-seo-files.mjs",
     "lint": "oxlint",
     "format": "oxfmt"
   },

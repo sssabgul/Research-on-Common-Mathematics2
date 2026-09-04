@@ -6,11 +6,14 @@
  *
  * 실행: npm run check   (Node 22.18+ 또는 24 — .ts 타입 스트리핑 필요)
  */
+import { readFileSync } from 'node:fs';
+
 import {
   curriculumUnits,
   LEVELS,
   TOPIC_KINDS,
 } from '../lib/curriculum.ts';
+import { SEO_FILES } from './generate-seo-files.mjs';
 
 const TONES = ['blue', 'purple', 'orange'];
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -75,6 +78,23 @@ for (const unit of curriculumUnits) {
         }
       }
     }
+  }
+}
+
+// 커밋된 sitemap.xml / robots.txt가 데이터·SITE_URL과 어긋나지 않는지 본다.
+// 소단원을 추가하고 npm run gen:seo를 잊으면 여기서 걸린다.
+for (const [file, build] of SEO_FILES) {
+  let actual;
+  try {
+    actual = readFileSync(file, "utf8");
+  } catch {
+    fail(file, "파일이 없음 — npm run gen:seo 실행");
+    continue;
+  }
+  // git이 줄바꿈을 CRLF로 바꿔놓아도 오탐이 나지 않게 정규화한다.
+  const normalize = (text) => text.split(String.fromCharCode(13)).join("");
+  if (normalize(actual) !== normalize(build())) {
+    fail(file, "데이터와 어긋남 — npm run gen:seo 실행");
   }
 }
 
