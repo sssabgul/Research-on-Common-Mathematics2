@@ -8,11 +8,7 @@
  */
 import { readFileSync } from 'node:fs';
 
-import {
-  curriculumUnits,
-  LEVELS,
-  TOPIC_KINDS,
-} from '../lib/curriculum.ts';
+import { curriculumUnits, LEVELS, TOPIC_KINDS } from '../lib/curriculum.ts';
 import { SEO_FILES } from './generate-seo-files.mjs';
 
 const TONES = ['blue', 'purple', 'orange'];
@@ -41,7 +37,8 @@ for (const unit of curriculumUnits) {
   if (!SLUG.test(unit.id)) fail(at, 'id가 URL 슬러그 형식이 아님');
   if (seenUnitIds.has(unit.id)) fail(at, 'id 중복');
   seenUnitIds.add(unit.id);
-  if (!TONES.includes(unit.tone)) fail(at, `tone '${unit.tone}'은 정의되지 않음`);
+  if (!TONES.includes(unit.tone))
+    fail(at, `tone '${unit.tone}'은 정의되지 않음`);
   if (unit.subunits.length === 0) fail(at, '소단원이 없음');
 
   for (const subunit of unit.subunits) {
@@ -83,18 +80,18 @@ for (const unit of curriculumUnits) {
 
 // 커밋된 sitemap.xml / robots.txt가 데이터·SITE_URL과 어긋나지 않는지 본다.
 // 소단원을 추가하고 npm run gen:seo를 잊으면 여기서 걸린다.
-for (const [file, build] of SEO_FILES) {
+for (const { file, build } of SEO_FILES) {
   let actual;
   try {
-    actual = readFileSync(file, "utf8");
+    actual = readFileSync(file, 'utf8');
   } catch {
-    fail(file, "파일이 없음 — npm run gen:seo 실행");
+    fail(file, '파일이 없음 — npm run gen:seo 실행');
     continue;
   }
   // git이 줄바꿈을 CRLF로 바꿔놓아도 오탐이 나지 않게 정규화한다.
-  const normalize = (text) => text.split(String.fromCharCode(13)).join("");
+  const normalize = (text) => text.split(String.fromCharCode(13)).join('');
   if (normalize(actual) !== normalize(build())) {
-    fail(file, "데이터와 어긋남 — npm run gen:seo 실행");
+    fail(file, '데이터와 어긋남 — npm run gen:seo 실행');
   }
 }
 

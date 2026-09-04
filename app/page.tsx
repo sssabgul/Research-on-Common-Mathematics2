@@ -74,7 +74,9 @@ export default function Home() {
               key={label}
               className="rounded-full border border-black/[0.05] bg-white px-4 py-2 text-[14px] text-[#636366] shadow-sm"
             >
-              <strong className="mr-1 font-bold text-[#1c1c1e]">{number}</strong>
+              <strong className="mr-1 font-bold text-[#1c1c1e]">
+                {number}
+              </strong>
               {label}
             </li>
           ))}
@@ -167,7 +169,7 @@ export default function Home() {
               ))}
             </ol>
           </div>
-          <aside className="rounded-[1.4rem] bg-[#1c1c1e] p-6 text-white sm:p-7">
+          <aside className="print-banner rounded-[1.4rem] bg-[#1c1c1e] p-6 text-white sm:p-7">
             <h3 className="text-[1.15rem] font-bold">안전하고 정직한 탐구</h3>
             <ul className="mt-4 space-y-3 text-[15px] leading-6 text-white/75">
               <li>

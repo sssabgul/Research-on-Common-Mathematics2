@@ -21,7 +21,8 @@ function toggle<T>(list: T[], value: T): T[] {
 const chipBase =
   'inline-flex min-h-9 items-center rounded-full px-3.5 text-[14px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#007aff]';
 const chipOn = 'bg-[#007aff] text-white';
-const chipOff = 'bg-white text-[#636366] hover:bg-[#eef6ff] hover:text-[#0066cc]';
+const chipOff =
+  'bg-white text-[#636366] hover:bg-[#eef6ff] hover:text-[#0066cc]';
 
 export function TopicSearch() {
   const [query, setQuery] = useState('');
@@ -117,7 +118,10 @@ export function TopicSearch() {
       <div className="mt-5 flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4">
         {/* 결과 개수만 낭독한다. 예전처럼 결과 전체를 live 영역에 두면
             바뀔 때마다 카드 수십 장이 통째로 읽힌다. */}
-        <p aria-live="polite" className="text-[15px] font-semibold text-[#3a3a3c]">
+        <p
+          aria-live="polite"
+          className="text-[15px] font-semibold text-[#3a3a3c]"
+        >
           {active
             ? `조건에 맞는 주제 ${results.length}개`
             : '검색어를 넣거나 조건을 골라보세요.'}

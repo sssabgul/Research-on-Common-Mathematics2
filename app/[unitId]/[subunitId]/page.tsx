@@ -101,7 +101,7 @@ export default async function SubunitPage({
 
         <section aria-labelledby="subunit-title">
           <div
-            className={`mb-5 rounded-[1.6rem] bg-gradient-to-br ${styles.gradient} p-6 text-white shadow-[0_18px_44px_rgb(28_53_84/16%)] sm:p-8`}
+            className={`print-banner mb-5 rounded-[1.6rem] bg-gradient-to-br ${styles.gradient} p-6 text-white shadow-[0_18px_44px_rgb(28_53_84/16%)] sm:p-8`}
           >
             <div className="mb-5 flex items-start justify-between gap-4">
               <span className="flex size-12 items-center justify-center rounded-[16px] bg-white/18 backdrop-blur-sm">

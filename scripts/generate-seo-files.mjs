@@ -56,13 +56,13 @@ export function buildRobots() {
 }
 
 export const SEO_FILES = [
-  ['public/sitemap.xml', buildSitemap],
-  ['public/robots.txt', buildRobots],
+  { file: 'public/sitemap.xml', build: buildSitemap },
+  { file: 'public/robots.txt', build: buildRobots },
 ];
 
 if (process.argv[1]?.endsWith('generate-seo-files.mjs')) {
   const { writeFileSync } = await import('node:fs');
-  for (const [file, build] of SEO_FILES) {
+  for (const { file, build } of SEO_FILES) {
     writeFileSync(file, build());
     console.log(`OK — ${file}`);
   }

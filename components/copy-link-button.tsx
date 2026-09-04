@@ -59,9 +59,9 @@ export function CopyLinkButton({
         <Link2 className="size-4" aria-hidden="true" />
       )}
       <span aria-hidden="true">{MESSAGES[state]}</span>
-      <span role="status" className="sr-only">
+      <output className="sr-only">
         {state === 'idle' ? '' : MESSAGES[state]}
-      </span>
+      </output>
     </button>
   );
 }
