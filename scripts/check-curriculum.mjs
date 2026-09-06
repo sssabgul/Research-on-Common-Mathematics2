@@ -10,6 +10,8 @@ import { readFileSync } from 'node:fs';
 
 import { curriculumUnits, LEVELS, TOPIC_KINDS } from '../lib/curriculum.ts';
 import { SEO_FILES } from './generate-seo-files.mjs';
+import './check-details.mjs';
+import './check-bezier.mjs';
 
 const TONES = ['blue', 'purple', 'orange'];
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

@@ -20,6 +20,13 @@ function allPaths() {
     ...curriculumUnits.flatMap((unit) =>
       unit.subunits.map((subunit) => `/${unit.id}/${subunit.id}`),
     ),
+    ...curriculumUnits.flatMap((unit) =>
+      unit.subunits.flatMap((subunit) =>
+        subunit.topics.map(
+          (topic) => '/' + unit.id + '/' + subunit.id + '/' + topic.id,
+        ),
+      ),
+    ),
   ];
 }
 

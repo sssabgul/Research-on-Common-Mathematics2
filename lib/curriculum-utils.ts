@@ -5,14 +5,14 @@ import {
   type Subunit,
   type Topic,
   type TopicKind,
-} from '@/lib/curriculum';
+} from './curriculum.ts';
 
 /** 대단원·소단원·주제를 한 줄로 펼친 항목. 검색과 사이트맵이 공용으로 쓴다. */
 export type TopicEntry = {
   unit: CurriculumUnit;
   subunit: Subunit;
   topic: Topic;
-  /** 이 주제로 바로 가는 경로. 예: `/geometry/circle#geofence` */
+  /** 주제 상세 페이지 경로. */
   href: string;
 };
 
@@ -34,6 +34,14 @@ export function topicHref(
   return `${subunitHref(unitId, subunitId)}#${topicId}`;
 }
 
+export function topicDetailHref(
+  unitId: string,
+  subunitId: string,
+  topicId: string,
+): string {
+  return `${subunitHref(unitId, subunitId)}/${topicId}`;
+}
+
 /** 모든 (대단원, 소단원) 쌍. generateStaticParams와 사이트맵이 쓴다. */
 export const allSubunits: SubunitEntry[] = curriculumUnits.flatMap((unit) =>
   unit.subunits.map((subunit) => ({
@@ -50,7 +58,7 @@ export const allTopics: TopicEntry[] = curriculumUnits.flatMap((unit) =>
       unit,
       subunit,
       topic,
-      href: topicHref(unit.id, subunit.id, topic.id),
+      href: topicDetailHref(unit.id, subunit.id, topic.id),
     })),
   ),
 );
@@ -60,6 +68,19 @@ export const allTopics: TopicEntry[] = curriculumUnits.flatMap((unit) =>
 export const unitCount = curriculumUnits.length;
 export const subunitCount = allSubunits.length;
 export const totalTopicCount = allTopics.length;
+
+export function findTopic(
+  unitId: string,
+  subunitId: string,
+  topicId: string,
+): TopicEntry | undefined {
+  return allTopics.find(
+    (entry) =>
+      entry.unit.id === unitId &&
+      entry.subunit.id === subunitId &&
+      entry.topic.id === topicId,
+  );
+}
 
 export function findUnit(unitId: string): CurriculumUnit | undefined {
   return curriculumUnits.find((unit) => unit.id === unitId);
@@ -81,7 +102,7 @@ function normalize(text: string): string {
 type SearchEntry = TopicEntry & { haystack: string };
 
 /**
- * 주제 36개짜리 전문 검색 인덱스.
+ * 요약 정보로 구성한 전문 검색 인덱스. 상세 본문은 클라이언트로 보내지 않는다.
  * 이 규모에서는 `includes` 한 번이면 충분해 검색 라이브러리를 쓰지 않는다.
  */
 const searchIndex: SearchEntry[] = allTopics.map((entry) => ({
@@ -108,19 +129,22 @@ export type TopicFilter = {
   query?: string;
   levels?: readonly Level[];
   kinds?: readonly TopicKind[];
+  subunitIds?: readonly string[];
 };
 
 export function searchTopics({
   query = '',
   levels = [],
   kinds = [],
+  subunitIds = [],
 }: TopicFilter): TopicEntry[] {
   const needle = normalize(query.trim());
 
-  return searchIndex.filter(({ haystack, topic }) => {
+  return searchIndex.filter(({ haystack, subunit, topic }) => {
     if (needle && !haystack.includes(needle)) return false;
     if (levels.length > 0 && !levels.includes(topic.level)) return false;
     if (kinds.length > 0 && !kinds.includes(topic.kind)) return false;
+    if (subunitIds.length > 0 && !subunitIds.includes(subunit.id)) return false;
     return true;
   });
 }

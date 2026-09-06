@@ -24,15 +24,6 @@ const stats = [
   [totalTopicCount, '탐구 주제'],
 ] as const;
 
-const recordSteps = [
-  ['01', '궁금한 점을 질문으로 좁히기'],
-  ['02', '자료를 모으거나 조건 정하기'],
-  ['03', '식·표·그래프로 직접 표현하기'],
-  ['04', '계산값과 관찰값 비교하기'],
-  ['05', '오차와 모형의 한계 분석하기'],
-  ['06', '배운 점과 다음 질문 남기기'],
-];
-
 const sources = [
   [
     '교육부 고시',
@@ -57,13 +48,10 @@ export default function Home() {
           생기부로 이어지는 나만의 수학 탐구
         </p>
         <h1 className="max-w-3xl text-[clamp(2rem,6vw,4rem)] leading-[1.08] font-extrabold tracking-[-0.055em] text-[#111113]">
-          작은 궁금증에서
-          <br />
           탐구 주제를 찾아보세요.
         </h1>
         <p className="mt-5 max-w-2xl text-[1.05rem] leading-8 text-[#636366] sm:text-[1.15rem]">
-          대단원과 소단원을 고르면 고1 수준에서 직접 계산하고 관찰할 수 있는
-          주제와 탐구 방향, 진로·교과 연계를 함께 볼 수 있어요.
+          단원별 탐구 주제를 찾아보세요.
         </p>
         <ul
           className="mt-6 flex list-none flex-wrap gap-2.5"
@@ -139,50 +127,6 @@ export default function Home() {
           </section>
         ))}
       </div>
-
-      <section
-        className="mt-16 border-t border-black/[0.08] pt-10 sm:mt-20"
-        aria-labelledby="record-guide-title"
-      >
-        <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
-          <div>
-            <p className="text-[13px] font-bold tracking-[0.08em] text-[#8e8e93] uppercase">
-              탐구 기록 가이드
-            </p>
-            <h2
-              id="record-guide-title"
-              className="mt-2 text-[1.55rem] font-extrabold tracking-[-0.035em] sm:text-[1.9rem]"
-            >
-              주제를 ‘나의 활동’으로 바꾸는 6단계
-            </h2>
-            <ol className="mt-5 grid gap-3 sm:grid-cols-2">
-              {recordSteps.map(([number, text]) => (
-                <li
-                  key={number}
-                  className="flex items-center gap-3 rounded-[1rem] bg-white p-4 text-[15px] font-semibold text-[#3a3a3c]"
-                >
-                  <span className="text-[13px] font-extrabold text-[#007aff]">
-                    {number}
-                  </span>
-                  {text}
-                </li>
-              ))}
-            </ol>
-          </div>
-          <aside className="print-banner rounded-[1.4rem] bg-[#1c1c1e] p-6 text-white sm:p-7">
-            <h3 className="text-[1.15rem] font-bold">안전하고 정직한 탐구</h3>
-            <ul className="mt-4 space-y-3 text-[15px] leading-6 text-white/75">
-              <li>
-                • 실제 주소와 개인정보 대신 가상 좌표나 익명 자료를 사용하세요.
-              </li>
-              <li>
-                • 실험은 안전한 범위에서 하고, 위험한 장비는 사용하지 마세요.
-              </li>
-              <li>• 조사한 내용과 내가 직접 한 계산·해석을 구분하세요.</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
 
       <section
         className="mt-10 rounded-[1.4rem] border border-black/[0.06] bg-white p-5 sm:p-7"

@@ -4,12 +4,7 @@ import { Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
-import {
-  LEVELS,
-  TOPIC_KINDS,
-  type Level,
-  type TopicKind,
-} from '@/lib/curriculum';
+import { curriculumUnits, TOPIC_KINDS, type TopicKind } from '@/lib/curriculum';
 import { searchTopics, totalTopicCount } from '@/lib/curriculum-utils';
 
 function toggle<T>(list: T[], value: T): T[] {
@@ -25,20 +20,28 @@ const chipOff =
   'bg-white text-[#636366] hover:bg-[#eef6ff] hover:text-[#0066cc]';
 
 export function TopicSearch() {
+  const [mode, setMode] = useState<'unit' | 'kind'>('unit');
   const [query, setQuery] = useState('');
-  const [levels, setLevels] = useState<Level[]>([]);
+  const [subunitIds, setSubunitIds] = useState<string[]>([]);
   const [kinds, setKinds] = useState<TopicKind[]>([]);
 
   const results = useMemo(
-    () => searchTopics({ query, levels, kinds }),
-    [query, levels, kinds],
+    () => searchTopics({ query, subunitIds, kinds }),
+    [query, subunitIds, kinds],
   );
 
-  const active = query.trim() !== '' || levels.length > 0 || kinds.length > 0;
+  const active =
+    query.trim() !== '' || subunitIds.length > 0 || kinds.length > 0;
 
   const reset = () => {
     setQuery('');
-    setLevels([]);
+    setSubunitIds([]);
+    setKinds([]);
+  };
+
+  const changeMode = (nextMode: 'unit' | 'kind') => {
+    setMode(nextMode);
+    setSubunitIds([]);
     setKinds([]);
   };
 
@@ -55,9 +58,41 @@ export function TopicSearch() {
         주제 {totalTopicCount}개에서 찾기
       </h2>
       <p className="mt-1 text-[15px] leading-6 text-[#636366]">
-        관심 있는 낱말이나 진로를 넣어보세요. 난이도와 유형으로 좁힐 수도
-        있습니다.
+        관심 있는 낱말이나 진로를 검색하거나, 원하는 방식으로 주제를 좁혀보세요.
       </p>
+
+      <div
+        className="mt-5 grid grid-cols-2 rounded-[1rem] bg-[#f2f2f7] p-1"
+        role="tablist"
+        aria-label="탐구 주제 찾기 방식"
+      >
+        {(
+          [
+            ['unit', '단원별 찾기'],
+            ['kind', '탐구 유형별 찾기'],
+          ] as const
+        ).map(([value, label]) => {
+          const selected = mode === value;
+          return (
+            <button
+              key={value}
+              id={`${value}-tab`}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-controls={`${value}-panel`}
+              onClick={() => changeMode(value)}
+              className={`min-h-11 rounded-[0.78rem] px-3 text-[15px] font-bold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#007aff] ${
+                selected
+                  ? 'bg-white text-[#007aff] shadow-sm'
+                  : 'text-[#636366] hover:text-[#1c1c1e]'
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="mt-4 flex items-center gap-2 rounded-[1.1rem] bg-[#f2f2f7] px-4 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#007aff]">
         <Search className="size-5 shrink-0 text-[#8e8e93]" aria-hidden="true" />
@@ -71,49 +106,67 @@ export function TopicSearch() {
         />
       </div>
 
-      <fieldset className="mt-4">
-        <legend className="mb-2 text-[13px] font-bold text-[#8e8e93]">
-          난이도
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {LEVELS.map((level) => {
-            const on = levels.includes(level);
-            return (
-              <button
-                key={level}
-                type="button"
-                aria-pressed={on}
-                onClick={() => setLevels(toggle(levels, level))}
-                className={`${chipBase} ${on ? chipOn : chipOff}`}
-              >
-                {level}
-              </button>
-            );
-          })}
+      {mode === 'unit' ? (
+        <div
+          id="unit-panel"
+          role="tabpanel"
+          aria-labelledby="unit-tab"
+          className="mt-5 space-y-4"
+        >
+          {curriculumUnits.map((unit) => (
+            <fieldset key={unit.id}>
+              <legend className="mb-2 text-[14px] font-bold text-[#636366]">
+                {unit.roman}. {unit.title}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {unit.subunits.map((subunit) => {
+                  const on = subunitIds.includes(subunit.id);
+                  return (
+                    <button
+                      key={subunit.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() =>
+                        setSubunitIds(toggle(subunitIds, subunit.id))
+                      }
+                      className={`${chipBase} ${on ? chipOn : chipOff}`}
+                    >
+                      {subunit.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+          ))}
         </div>
-      </fieldset>
-
-      <fieldset className="mt-4">
-        <legend className="mb-2 text-[13px] font-bold text-[#8e8e93]">
-          탐구 유형
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {TOPIC_KINDS.map((kind) => {
-            const on = kinds.includes(kind);
-            return (
-              <button
-                key={kind}
-                type="button"
-                aria-pressed={on}
-                onClick={() => setKinds(toggle(kinds, kind))}
-                className={`${chipBase} ${on ? chipOn : chipOff}`}
-              >
-                {kind}
-              </button>
-            );
-          })}
-        </div>
-      </fieldset>
+      ) : (
+        <fieldset
+          id="kind-panel"
+          role="tabpanel"
+          aria-labelledby="kind-tab"
+          className="mt-5"
+        >
+          <legend className="mb-2 text-[14px] font-bold text-[#636366]">
+            탐구 유형을 골라보세요
+          </legend>
+          <div className="flex flex-wrap gap-2">
+            {TOPIC_KINDS.map((kind) => {
+              const on = kinds.includes(kind);
+              return (
+                <button
+                  key={kind}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setKinds(toggle(kinds, kind))}
+                  className={`${chipBase} ${on ? chipOn : chipOff}`}
+                >
+                  {kind}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      )}
 
       <div className="mt-5 flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4">
         {/* 결과 개수만 낭독한다. 예전처럼 결과 전체를 live 영역에 두면
@@ -156,8 +209,14 @@ export function TopicSearch() {
                   {topic.summary}
                 </p>
                 <p className="mt-2 text-[13px] font-semibold text-[#8e8e93]">
-                  {topic.level} · {topic.kind}
+                  {topic.kind}
                 </p>
+                <p className="mt-1 text-[14px] leading-6 text-[#636366]">
+                  {topic.career}
+                </p>
+                <span className="mt-3 inline-flex min-h-11 items-center font-bold text-[#007aff]">
+                  자세히 →
+                </span>
               </Link>
             </li>
           ))}

@@ -95,6 +95,97 @@
   padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
 
+.detail-document {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.bezier-lab button:focus-visible,
+.bezier-lab input:focus-visible {
+  outline: 3px solid #007aff;
+  outline-offset: 4px;
+}
+.bezier-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 0.8rem;
+  background: #f2f2f7;
+  padding: 0.5rem 0.85rem;
+  color: #3a3a3c;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bezier-button:hover {
+  background: #e7eefa;
+}
+.bezier-button.bezier-primary {
+  background: #0066cc;
+  color: white;
+}
+.bezier-button.bezier-primary:hover {
+  background: #005bb7;
+}
+.bezier-range {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  accent-color: #0066cc;
+  cursor: pointer;
+}
+.bezier-lab input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  accent-color: #0066cc;
+}
+.bezier-handle {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.bezier-handle:active {
+  cursor: grabbing;
+}
+.detail-section {
+  min-width: 0;
+  scroll-margin-top: 6rem;
+  border: 1px solid rgb(0 0 0 / 6%);
+  border-radius: 1.5rem;
+  background: white;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  color: #3a3a3c;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+.detail-section > * + * {
+  margin-top: 1rem;
+}
+.detail-section h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #111113;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+.math-expression {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.25rem 0;
+}
+.math-expression .katex-display {
+  margin: 0.75rem 0;
+}
+.math-expression .katex {
+  font-size: 1.12em;
+}
+.detail-document a:focus-visible {
+  outline: 2px solid #007aff;
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
 @media (min-width: 640px) {
   .safe-area-x {
     padding-left: max(1.5rem, env(safe-area-inset-left));
@@ -141,7 +232,7 @@
   }
 
   /* 주제 하나가 페이지 경계에서 두 동강 나지 않게 한다. */
-  article {
+  .topic-summary {
     break-inside: avoid;
     background: #fff !important;
     border: 1px solid #d0d0d0 !important;
@@ -149,6 +240,50 @@
     border-radius: 6pt !important;
     padding: 10pt !important;
     margin-bottom: 8pt;
+  }
+
+  .detail-document {
+    break-inside: auto;
+    border: 0;
+    padding: 0;
+  }
+  .detail-section {
+    break-inside: auto;
+    border: 0;
+    padding: 8pt 0;
+    border-radius: 0;
+    background: #fff;
+  }
+  .detail-section h2,
+  .detail-section h3 {
+    break-after: avoid;
+  }
+  .detail-step,
+  .detail-table tr {
+    break-inside: avoid;
+  }
+  .detail-figure {
+    break-inside: avoid;
+    max-width: 320pt;
+    margin-inline: auto;
+  }
+  .detail-figure svg {
+    min-width: 0;
+  }
+  .detail-table,
+  .math-expression {
+    overflow: visible;
+  }
+  .detail-table th,
+  .detail-table td {
+    white-space: normal;
+    padding: 5pt;
+  }
+  .math-expression {
+    font-size: 9pt;
+  }
+  .detail-table thead {
+    display: table-header-group;
   }
 
   /* 종이에서는 클릭할 수 없으니 외부 링크의 주소를 같이 찍는다. */

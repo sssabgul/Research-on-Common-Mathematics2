@@ -12,7 +12,7 @@ import {
   allSubunits,
   findSubunit,
   subunitHref,
-  topicHref,
+  topicDetailHref,
 } from '@/lib/curriculum-utils';
 import { toneStyles } from '@/lib/tone';
 
@@ -150,7 +150,7 @@ export default async function SubunitPage({
                 topic={topic}
                 number={index + 1}
                 tone={unit.tone}
-                href={topicHref(unit.id, subunit.id, topic.id)}
+                href={topicDetailHref(unit.id, subunit.id, topic.id)}
               />
             ))}
           </div>
