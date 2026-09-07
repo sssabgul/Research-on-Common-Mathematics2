@@ -6,11 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 export function CopyLinkButton({
   href,
   topicTitle,
-  className = '',
 }: {
   href: string;
   topicTitle: string;
-  className?: string;
 }) {
   const [state, setState] = useState<'idle' | 'copied' | 'fallback'>('idle');
   const [fallbackUrl, setFallbackUrl] = useState('');
@@ -43,7 +41,7 @@ export function CopyLinkButton({
         ? '아래 주소를 직접 복사하세요'
         : '링크 복사';
   return (
-    <div className={'min-w-0 max-w-full ' + className}>
+    <div className="min-w-0 max-w-full">
       <button
         type="button"
         onClick={copy}

@@ -1,7 +1,6 @@
 import {
   curriculumUnits,
   type CurriculumUnit,
-  type Level,
   type Subunit,
   type Topic,
   type TopicKind,
@@ -16,7 +15,7 @@ export type TopicEntry = {
   href: string;
 };
 
-export type SubunitEntry = {
+type SubunitEntry = {
   unit: CurriculumUnit;
   subunit: Subunit;
   href: string;
@@ -82,10 +81,6 @@ export function findTopic(
   );
 }
 
-export function findUnit(unitId: string): CurriculumUnit | undefined {
-  return curriculumUnits.find((unit) => unit.id === unitId);
-}
-
 export function findSubunit(
   unitId: string,
   subunitId: string,
@@ -125,16 +120,14 @@ const searchIndex: SearchEntry[] = allTopics.map((entry) => ({
   ),
 }));
 
-export type TopicFilter = {
+type TopicFilter = {
   query?: string;
-  levels?: readonly Level[];
   kinds?: readonly TopicKind[];
   subunitIds?: readonly string[];
 };
 
 export function searchTopics({
   query = '',
-  levels = [],
   kinds = [],
   subunitIds = [],
 }: TopicFilter): TopicEntry[] {
@@ -142,7 +135,6 @@ export function searchTopics({
 
   return searchIndex.filter(({ haystack, subunit, topic }) => {
     if (needle && !haystack.includes(needle)) return false;
-    if (levels.length > 0 && !levels.includes(topic.level)) return false;
     if (kinds.length > 0 && !kinds.includes(topic.kind)) return false;
     if (subunitIds.length > 0 && !subunitIds.includes(subunit.id)) return false;
     return true;

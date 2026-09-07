@@ -2,6 +2,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { ReactNode } from 'react';
 import { CopyLinkButton } from '@/components/copy-link-button';
 import { DetailFigure } from '@/components/detail-figure';
 import { MathExpression } from '@/components/math-expression';
@@ -45,15 +46,31 @@ export async function generateMetadata({
     },
   };
 }
-const sections = [
-  ['question', '무엇을 탐구할까?'],
-  ['concepts', '먼저 알아둘 개념'],
-  ['example', '작은 예제로 이해하기'],
-  ['activity', '직접 탐구해 보기'],
-  ['reflection', '결과를 어떻게 해석할까?'],
-  ['extension', '한 걸음 더'],
-  ['connections', '교과·진로 연결과 참고자료'],
-] as const;
+const sectionTitles = {
+  question: '무엇을 탐구할까?',
+  concepts: '먼저 알아둘 개념',
+  example: '작은 예제로 이해하기',
+  activity: '직접 탐구해 보기',
+  reflection: '결과를 어떻게 해석할까?',
+  extension: '한 걸음 더',
+  connections: '교과·진로 연결과 참고자료',
+} as const;
+
+function DetailSection({
+  id,
+  children,
+}: {
+  id: keyof typeof sectionTitles;
+  children: ReactNode;
+}) {
+  const titleId = `${id}-title`;
+  return (
+    <section id={id} aria-labelledby={titleId} className="detail-section">
+      <h2 id={titleId}>{sectionTitles[id]}</h2>
+      {children}
+    </section>
+  );
+}
 
 export default async function TopicPage({
   params,
@@ -124,7 +141,7 @@ export default async function TopicPage({
         aria-label="상세 안내 목차"
         className="mb-7 flex flex-wrap gap-2 print:hidden"
       >
-        {sections.map(([id, title], i) => (
+        {Object.entries(sectionTitles).map(([id, title], i) => (
           <a
             key={id}
             href={'#' + id}
@@ -135,23 +152,13 @@ export default async function TopicPage({
         ))}
       </nav>
       <div className="detail-sections space-y-5">
-        <section
-          id="question"
-          aria-labelledby="question-title"
-          className="detail-section"
-        >
-          <h2 id="question-title">무엇을 탐구할까?</h2>
+        <DetailSection id="question">
           <p>{detail.background}</p>
           <p className="rounded-2xl bg-[#eef6ff] p-4 font-semibold text-[#145793]">
             {topic.question}
           </p>
-        </section>
-        <section
-          id="concepts"
-          aria-labelledby="concepts-title"
-          className="detail-section"
-        >
-          <h2 id="concepts-title">먼저 알아둘 개념</h2>
+        </DetailSection>
+        <DetailSection id="concepts">
           <dl className="space-y-5">
             {detail.concepts.map((concept) => (
               <div key={concept.name}>
@@ -165,13 +172,8 @@ export default async function TopicPage({
               </div>
             ))}
           </dl>
-        </section>
-        <section
-          id="example"
-          aria-labelledby="example-title"
-          className="detail-section"
-        >
-          <h2 id="example-title">작은 예제로 이해하기</h2>
+        </DetailSection>
+        <DetailSection id="example">
           <h3 className="font-bold text-[#1c1c1e]">{example.title}</h3>
           {example.paragraphs.map((p) => (
             <p key={p}>{p}</p>
@@ -216,13 +218,8 @@ export default async function TopicPage({
             </div>
           )}
           {example.plot && <DetailFigure plot={example.plot} />}
-        </section>
-        <section
-          id="activity"
-          aria-labelledby="activity-title"
-          className="detail-section"
-        >
-          <h2 id="activity-title">직접 탐구해 보기</h2>
+        </DetailSection>
+        <DetailSection id="activity">
           <ol className="list-none space-y-5">
             {detail.steps.map((step, i) => (
               <li
@@ -243,37 +240,22 @@ export default async function TopicPage({
               </li>
             ))}
           </ol>
-        </section>
-        <section
-          id="reflection"
-          aria-labelledby="reflection-title"
-          className="detail-section"
-        >
-          <h2 id="reflection-title">결과를 어떻게 해석할까?</h2>
+        </DetailSection>
+        <DetailSection id="reflection">
           <ul className="list-disc space-y-3 pl-5">
             {detail.reflection.map((q) => (
               <li key={q}>{q}</li>
             ))}
           </ul>
-        </section>
-        <section
-          id="extension"
-          aria-labelledby="extension-title"
-          className="detail-section"
-        >
-          <h2 id="extension-title">한 걸음 더</h2>
+        </DetailSection>
+        <DetailSection id="extension">
           <ol className="list-decimal space-y-3 pl-5">
             {detail.extensions.map((q) => (
               <li key={q}>{q}</li>
             ))}
           </ol>
-        </section>
-        <section
-          id="connections"
-          aria-labelledby="connections-title"
-          className="detail-section"
-        >
-          <h2 id="connections-title">교과·진로 연결과 참고자료</h2>
+        </DetailSection>
+        <DetailSection id="connections">
           <h3 className="font-bold text-[#1c1c1e]">교과에서 사용한 개념</h3>
           <p className="text-[14px] font-semibold text-[#636366]">
             {subunit.standard} · {topic.curriculum}
@@ -307,7 +289,7 @@ export default async function TopicPage({
               </li>
             ))}
           </ul>
-        </section>
+        </DetailSection>
       </div>
       <Link
         href={topicHref(unitId, subunitId, topicId)}

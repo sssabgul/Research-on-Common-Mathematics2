@@ -1,5 +1,5 @@
-export type Concept = { name: string; explanation: string; formula?: string };
-export type DataTable = {
+type Concept = { name: string; explanation: string; formula?: string };
+type DataTable = {
   caption: string;
   headers: string[];
   rows: string[][];
@@ -13,7 +13,7 @@ export type Plot = {
   series: { label: string; points: [number, number][] }[];
   circles?: { x: number; y: number; r: number; label: string }[];
 };
-export type TopicDetail = {
+type TopicDetail = {
   background: string;
   concepts: Concept[];
   example: {

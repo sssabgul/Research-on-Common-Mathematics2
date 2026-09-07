@@ -4,7 +4,7 @@ import type { Tone } from '@/lib/curriculum';
  * 대단원 색조. 예전에는 같은 색표가 page.tsx 세 곳에 흩어져 있어
  * 색 하나 바꾸려면 세 군데를 손대야 했다. 여기가 단일 진실 공급원이다.
  */
-export type ToneStyle = {
+type ToneStyle = {
   /** 소단원 헤더 배너의 그라데이션 */
   gradient: string;
   /** 대단원 설명 줄의 옅은 배경 */

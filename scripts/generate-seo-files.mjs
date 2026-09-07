@@ -9,7 +9,7 @@
  *   → lib/site.ts의 SITE_URL을 실제 도메인으로 바꾼 뒤 반드시 다시 실행할 것.
  *   → 데이터와 어긋나면 npm run check가 잡아낸다.
  */
-import { curriculumUnits } from '../lib/curriculum.ts';
+import { allSubunits, allTopics } from '../lib/curriculum-utils.ts';
 import { SITE_URL } from '../lib/site.ts';
 
 const NEWLINE = String.fromCharCode(10);
@@ -17,20 +17,12 @@ const NEWLINE = String.fromCharCode(10);
 function allPaths() {
   return [
     '/',
-    ...curriculumUnits.flatMap((unit) =>
-      unit.subunits.map((subunit) => `/${unit.id}/${subunit.id}`),
-    ),
-    ...curriculumUnits.flatMap((unit) =>
-      unit.subunits.flatMap((subunit) =>
-        subunit.topics.map(
-          (topic) => '/' + unit.id + '/' + subunit.id + '/' + topic.id,
-        ),
-      ),
-    ),
+    ...allSubunits.map(({ href }) => href),
+    ...allTopics.map(({ href }) => href),
   ];
 }
 
-export function buildSitemap() {
+function buildSitemap() {
   const urls = allPaths()
     .map((path) =>
       [
@@ -52,7 +44,7 @@ export function buildSitemap() {
   ].join(NEWLINE);
 }
 
-export function buildRobots() {
+function buildRobots() {
   return [
     'User-agent: *',
     'Allow: /',

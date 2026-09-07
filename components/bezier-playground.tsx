@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { Download, Pause, Play, RotateCcw } from 'lucide-react';
 import {
   BEZIER_PRESETS,
+  bezierPath,
   bezierSvg,
   clampCoordinate,
   constructBezier,
@@ -37,8 +38,7 @@ export function BezierPlayground() {
   ].some(([p, r]) => Math.hypot(p.x - r.x, p.y - r.y) < 1e-9);
   const current = points[selected];
   const samples = sampleBezier(points, 11);
-  const curvePath =
-    'M ' + plotPoint(a) + ' Q ' + plotPoint(b) + ' ' + plotPoint(c);
+  const curvePath = bezierPath(points);
 
   useEffect(() => {
     if (!playing) return;

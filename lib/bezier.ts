@@ -28,7 +28,7 @@ export const BEZIER_PRESETS: { name: string; points: ControlPoints }[] = [
   },
 ];
 
-export function interpolate(a: Point, b: Point, t: number): Point {
+function interpolate(a: Point, b: Point, t: number): Point {
   return { x: (1 - t) * a.x + t * b.x, y: (1 - t) * a.y + t * b.y };
 }
 
@@ -62,21 +62,20 @@ export const plotPoint = (p: Point) => plotX(p.x) + ',' + plotY(p.y);
 export const pointText = (p: Point) =>
   '(' + Number(p.x.toFixed(2)) + ', ' + Number(p.y.toFixed(2)) + ')';
 
+export function bezierPath([a, b, c]: ControlPoints): string {
+  return 'M ' + plotPoint(a) + ' Q ' + plotPoint(b) + ' ' + plotPoint(c);
+}
+
 /** A self-contained, static image; no page scripts or external resources are exported. */
 export function bezierSvg(points: ControlPoints): string {
-  const [a, b, c] = points;
   return (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 520">' +
     '<title>내분을 반복해 만든 이차 베지어 곡선</title><rect width="480" height="520" fill="white"/>' +
     '<polyline points="' +
     points.map(plotPoint).join(' ') +
     '" fill="none" stroke="#98a2b3" stroke-dasharray="6 5"/>' +
-    '<path d="M ' +
-    plotPoint(a) +
-    ' Q ' +
-    plotPoint(b) +
-    ' ' +
-    plotPoint(c) +
+    '<path d="' +
+    bezierPath(points) +
     '" fill="none" stroke="#007aff" stroke-width="4"/>' +
     points
       .map(
