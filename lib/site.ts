@@ -1,10 +1,8 @@
 /**
  * 배포 도메인. OG 태그와 sitemap.xml의 절대 URL을 만드는 데 쓴다.
- *
- * TODO: 실제 Netlify 주소로 바꿀 것. 이 값이 틀리면 카카오톡·검색엔진이
- * 잘못된 URL을 보게 된다(사이트 자체는 상대 경로라 정상 동작한다).
+ * 도메인을 바꾸면 `npm run gen:seo`를 다시 실행할 것.
  */
-export const SITE_URL = 'https://gongsu2-tamgu.netlify.app';
+export const SITE_URL = 'https://research-on-common-mathematics2.netlify.app';
 
 export const SITE_NAME = '공통수학2 탐구실';
 

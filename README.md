@@ -22,6 +22,7 @@ npm run dev
 | `npm run dev`                     | 개발 서버                                      |
 | `npm run build`                   | 정적 빌드 (`dist/client`)                      |
 | `npm run check`                   | 탐구 데이터 무결성 + SEO 파일 동기화 검사      |
+| `npm run postbuild`               | 빌드 산출물 검사 (build 뒤 자동 실행)          |
 | `npm run gen:seo`                 | `public/sitemap.xml`, `public/robots.txt` 생성 |
 | `npm run lint` / `npm run format` | oxlint / oxfmt                                 |
 
@@ -84,9 +85,16 @@ t 슬라이더·자동 재생으로 두 단계 내분과 Q의 자취를 확인�
 수동 배포가 필요하면 `npm run build` 후 생성되는 `dist/client` 폴더를 Netlify Deploys 화면에
 업로드합니다.
 
-> **배포 전 확인:** `lib/site.ts`의 `SITE_URL`이 아직 임시 주소입니다.
-> 실제 도메인으로 바꾼 뒤 `npm run gen:seo`를 다시 실행하세요.
-> 이 값은 OG 태그(카카오톡 공유 미리보기)와 sitemap.xml의 절대 URL에 쓰입니다.
+배포 주소는 `https://research-on-common-mathematics2.netlify.app` 입니다.
+도메인을 바꾸면 `lib/site.ts`의 `SITE_URL`을 고치고 `npm run gen:seo`를 다시 실행하세요.
+이 값은 OG 태그(카카오톡 공유 미리보기)와 sitemap.xml의 절대 URL에 쓰입니다.
+
+> **정적 배포라 서버가 없습니다.** `dist/client` 폴더가 사이트 전부입니다. 페이지마다
+> `<경로>.html`(직접 접속·새로고침용)과 `<경로>.txt`(링크를 눌러 이동할 때 App Router가
+> 가져가는 RSC 페이로드)가 **둘 다** 있어야 합니다. `npm run build`가 끝나면
+> `npm run postbuild`(`scripts/check-export.mjs`)가 자동으로 이를 확인하고,
+> 하나라도 빠지면 빌드를 실패시킵니다. 예전에 `.txt`가 안 나와서 "자세히"를 눌러도
+> 아무 일이 없는데 배포는 Published로 뜨는 사고가 있었습니다.
 
 ## 남은 과제
 

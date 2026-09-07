@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gongsu2-tamgu.netlify.app/sitemap.xml
+Sitemap: https://research-on-common-mathematics2.netlify.app/sitemap.xml
