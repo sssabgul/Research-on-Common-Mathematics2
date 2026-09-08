@@ -8,6 +8,7 @@ import { DetailFigure } from '@/components/detail-figure';
 import { MathExpression } from '@/components/math-expression';
 import { PrintButton } from '@/components/print-button';
 import { BezierPlayground } from '@/components/bezier-playground';
+import { TopicVisual } from '@/components/topic-visual';
 import { allTopics, findTopic, topicHref } from '@/lib/curriculum-utils';
 import { findTopicDetail } from '@/lib/topic-details';
 import { toneStyles } from '@/lib/tone';
@@ -137,6 +138,7 @@ export default async function TopicPage({
       {unitId === 'geometry' &&
         subunitId === 'section-point' &&
         topicId === 'bezier' && <BezierPlayground />}
+      <TopicVisual topicKey={[unitId, subunitId, topicId].join('/')} />
       <nav
         aria-label="상세 안내 목차"
         className="mb-7 flex flex-wrap gap-2 print:hidden"

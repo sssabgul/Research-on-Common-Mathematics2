@@ -51,6 +51,29 @@ for (const path of paths) {
 }
 
 // 없는 주소로 들어왔을 때 보여줄 페이지.
+// Every detailed route must retain its default visual in static HTML, including
+// client activities before hydration. Keep this file compatible with Node 22.14.
+const excludedVisuals = new Set([
+  '/geometry/section-point/bezier',
+  '/logic/propositions/even-square-proof',
+]);
+const detailedPaths = paths.filter((path) => path.split('/').filter(Boolean).length === 3);
+let visualCount = 0;
+for (const path of detailedPaths) {
+  const file = join(OUT, path.slice(1) + '.html');
+  if (!existsSync(file)) continue;
+  const html = readFileSync(file, 'utf8');
+  const hasVisual = html.includes('data-topic-visual="' + path.slice(1) + '"');
+  if (excludedVisuals.has(path)) {
+    if (hasVisual) missing.push(path + ' → 제외 주제에 새 자료가 있음');
+  } else {
+    if (!hasVisual || !html.includes('관찰해 보세요') || !html.includes('<svg'))
+      missing.push(path + ' → 기본 시각자료·관찰 질문 누락');
+    else visualCount++;
+  }
+}
+if (visualCount !== 41) missing.push('새 시각자료가 포함된 상세 HTML은 41개여야 함: ' + visualCount);
+
 if (!existsSync(join(OUT, '404.html')))
   missing.push('404 페이지 → 404.html 없음');
 
