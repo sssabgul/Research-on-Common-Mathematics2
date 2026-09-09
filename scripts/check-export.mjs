@@ -57,7 +57,9 @@ const excludedVisuals = new Set([
   '/geometry/section-point/bezier',
   '/logic/propositions/even-square-proof',
 ]);
-const detailedPaths = paths.filter((path) => path.split('/').filter(Boolean).length === 3);
+const detailedPaths = paths.filter(
+  (path) => path.split('/').filter(Boolean).length === 3,
+);
 let visualCount = 0;
 for (const path of detailedPaths) {
   const file = join(OUT, path.slice(1) + '.html');
@@ -72,7 +74,8 @@ for (const path of detailedPaths) {
     else visualCount++;
   }
 }
-if (visualCount !== 41) missing.push('새 시각자료가 포함된 상세 HTML은 41개여야 함: ' + visualCount);
+if (visualCount !== 41)
+  missing.push('새 시각자료가 포함된 상세 HTML은 41개여야 함: ' + visualCount);
 
 if (!existsSync(join(OUT, '404.html')))
   missing.push('404 페이지 → 404.html 없음');
@@ -86,4 +89,6 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-console.log(`OK — 정적 페이지 ${paths.length}개 (HTML + RSC 페이로드) / 404`);
+console.log(
+  `OK — 정적 페이지 ${paths.length}개 (HTML + RSC 페이로드) / 404 / 시각자료 ${visualCount}개 + 제외 ${excludedVisuals.size}개`,
+);

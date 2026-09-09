@@ -124,7 +124,20 @@ function validateScene(scene, key) {
         key + ': table columns',
       );
 }
+// 다른 컨트롤 값 때문에 정의역에서 빠진 값들. UI가 막는 조합과 같은 규칙을 쓴다.
+const excludedValues = (control, state) =>
+  control.kind === 'range' &&
+  control.excludeWhen &&
+  state[control.excludeWhen.control] === control.excludeWhen.equals
+    ? control.excludeWhen.values
+    : null;
+const reachable = (definition, state) =>
+  definition.controls.every(
+    (control) =>
+      !excludedValues(control, state)?.includes(Number(state[control.id])),
+  );
 let sceneCount = 0;
+let excludeCount = 0;
 for (const definition of topicVisuals) {
   assert.ok(definition.title && definition.question);
   const [unit, , id] = definition.key.split('/');
@@ -173,16 +186,42 @@ for (const definition of topicVisuals) {
   if (id === 'self-inverse')
     for (const x of [-4, -0.5, 0.5, 4])
       states.push({ ...definition.initial, fn: 'reciprocal', x });
-  const unchanged = JSON.stringify(states);
-  for (const state of states) {
+  // UI에서 고를 수 없는 조합은 평가 대상이 아니다.
+  const usable = states.filter((state) => reachable(definition, state));
+  const unchanged = JSON.stringify(usable);
+  for (const state of usable) {
     validateScene(evaluate(id, state), definition.key);
     sceneCount++;
   }
   assert.equal(
-    JSON.stringify(states),
+    JSON.stringify(usable),
     unchanged,
     definition.key + ': evaluator mutated input',
   );
+  // 제외 선언이 낡지 않았는지 확인한다. 제외한 조합이 실제로 비유한 값을 만들어야
+  // 이 선언이 아직 필요하다는 뜻이다. 계산식이 바뀌어 제외가 불필요해지면 여기서 걸린다.
+  for (const control of definition.controls) {
+    if (control.kind !== 'range' || !control.excludeWhen) continue;
+    const { control: other, equals, values } = control.excludeWhen;
+    for (const value of values) {
+      const state = {
+        ...definition.initial,
+        [other]: equals,
+        [control.id]: value,
+      };
+      assert.throws(
+        () => inspect(evaluate(id, state), definition.key),
+        undefined,
+        definition.key +
+          ': ' +
+          control.id +
+          '=' +
+          value +
+          ' 제외가 불필요해졌다',
+      );
+      excludeCount++;
+    }
+  }
 }
 assert.deepEqual(weightedHub(30), [2, 1]);
 assert.deepEqual(weightedHub(20), [4, 2]);
@@ -383,5 +422,7 @@ for (const [min, max] of [
 console.log(
   'OK — 시각자료 41개 (정적 9 / 조작형 32) / ' +
     sceneCount +
-    '개 상태 / 기본값·경계·집합·함수 검산',
+    '개 상태 / 정의역 제외 ' +
+    excludeCount +
+    '건 / 기본값·경계·집합·함수 검산',
 );

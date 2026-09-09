@@ -13,6 +13,7 @@
     "check": "node scripts/check-curriculum.mjs",
     "gen:seo": "node scripts/generate-seo-files.mjs",
     "lint": "oxlint",
+    "format:check": "oxfmt --check",
     "format": "oxfmt"
   },
   "dependencies": {

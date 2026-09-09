@@ -2,12 +2,27 @@
 
 import { useState } from 'react';
 import type {
+  VisualControl,
   VisualDefinition,
   VisualEvaluator,
   VisualState,
 } from '@/lib/visuals/types';
 import { format } from '@/lib/visuals/shared';
 import { SceneView } from './diagrams';
+
+type RangeControl = Extract<VisualControl, { kind: 'range' }>;
+// min~max를 step으로 훑은 값. 0.1 같은 step의 누적 오차를 눈금 계산과 같은 방식으로 정규화한다.
+const rangeValues = (control: RangeControl) =>
+  Array.from(
+    { length: Math.round((control.max - control.min) / control.step) + 1 },
+    (_, i) => Number((control.min + i * control.step).toPrecision(12)),
+  );
+// 다른 컨트롤 값 때문에 지금 정의역에서 빠진 값들. 제외가 없으면 null.
+const excludedValues = (control: RangeControl, state: VisualState) =>
+  control.excludeWhen &&
+  state[control.excludeWhen.control] === control.excludeWhen.equals
+    ? control.excludeWhen.values
+    : null;
 
 export function Activity({
   definition,
@@ -21,8 +36,22 @@ export function Activity({
   }));
   const id = 'visual-' + definition.key.replaceAll('/', '-');
   const scene = evaluate(definition.key.split('/').at(-1)!, state);
+  // 값 하나를 바꾸면 다른 컨트롤이 제외 상태가 될 수 있다. 그 값은 정의역 밖이므로
+  // 처음 값으로, 처음 값마저 제외라면 남은 첫 값으로 되돌린다.
   const update = (key: string, value: VisualState[string]) =>
-    setState((old) => ({ ...old, [key]: value }));
+    setState((old) => {
+      const next = { ...old, [key]: value };
+      for (const control of definition.controls) {
+        if (control.kind !== 'range') continue;
+        const excluded = excludedValues(control, next);
+        if (!excluded?.includes(Number(next[control.id]))) continue;
+        const initial = definition.initial[control.id];
+        next[control.id] = excluded.includes(Number(initial))
+          ? (rangeValues(control).find((v) => !excluded.includes(v)) ?? initial)
+          : initial;
+      }
+      return next;
+    });
   return (
     <div className="visual-workspace">
       <SceneView scene={scene} id={id} />
@@ -63,18 +92,14 @@ export function Activity({
                 <select
                   id={inputId}
                   value={String(state[control.id])}
-                  onChange={(event) => {
-                    const option = control.options.find(
-                      (item) => String(item.value) === event.target.value,
-                    )!;
-                    if (
-                      control.id === 'fn' &&
-                      option.value === 'reciprocal' &&
-                      Number(state.x) === 0
+                  onChange={(event) =>
+                    update(
+                      control.id,
+                      control.options.find(
+                        (item) => String(item.value) === event.target.value,
+                      )!.value,
                     )
-                      setState((old) => ({ ...old, fn: option.value, x: 1 }));
-                    else update(control.id, option.value);
-                  }}
+                  }
                 >
                   {control.options.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -84,24 +109,27 @@ export function Activity({
                 </select>
               </div>
             );
-          if (
-            definition.key.endsWith('/self-inverse') &&
-            control.id === 'x' &&
-            state.fn === 'reciprocal'
-          )
+          // 정의역에 구멍이 뚫린 동안에는 슬라이더 대신 남은 값만 고르게 한다.
+          const excluded = excludedValues(control, state);
+          if (excluded)
             return (
               <div className="visual-control" key={control.id}>
-                <label htmlFor={inputId}>입력 x (0 제외)</label>
+                <label htmlFor={inputId}>
+                  {control.label} ({excluded.map((v) => format(v)).join(', ')}{' '}
+                  제외)
+                </label>
                 <select
                   id={inputId}
-                  value={String(state.x)}
-                  onChange={(event) => update('x', Number(event.target.value))}
+                  value={String(state[control.id])}
+                  onChange={(event) =>
+                    update(control.id, Number(event.target.value))
+                  }
                 >
-                  {Array.from({ length: 17 }, (_, i) => -4 + i * 0.5)
-                    .filter((x) => x !== 0)
-                    .map((x) => (
-                      <option key={x} value={x}>
-                        {x}
+                  {rangeValues(control)
+                    .filter((v) => !excluded.includes(v))
+                    .map((v) => (
+                      <option key={v} value={v}>
+                        {format(v)} {control.unit}
                       </option>
                     ))}
                 </select>

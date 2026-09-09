@@ -22,6 +22,18 @@ export const TASTES = [
 ];
 export const INGREDIENTS = ['밀', '우유', '달걀', '쌀', '콩', '땅콩'];
 export const PERMISSIONS = ['보기', '댓글', '업로드', '삭제'];
+// 환승 정류장은 두 노선에 함께 속한다. wifi-coverage와 같은 마름모 규약을 쓴다.
+const STOPS = [
+  { label: '학교', color: 0, transfer: false },
+  { label: '시장', color: 0, transfer: false },
+  { label: '역', color: 1, transfer: true },
+  { label: '공원', color: 1, transfer: true },
+  { label: '도서관', color: 2, transfer: false },
+];
+const TRANSFERS: { point: Point; label: string }[] = [
+  { point: [1, 0], label: '역' },
+  { point: [3, 0], label: '공원' },
+];
 export const intersection = (a: string[], b: string[]) =>
   a.filter((v) => b.includes(v));
 export const union = (a: string[], b: string[]) => [...new Set([...a, ...b])];
@@ -218,8 +230,12 @@ export function logicScene(id: string, state: VisualState): VisualScene {
             markers: [
               { point: [-0.9, 0.5], label: '학교', color: 0 },
               { point: [-0.9, -0.5], label: '시장', color: 0 },
-              { point: [1, 0], label: '역', color: 1 },
-              { point: [3, 0], label: '공원', color: 2 },
+              ...TRANSFERS.map(({ point, label }) => ({
+                point,
+                label,
+                color: 1,
+                shape: 'diamond' as const,
+              })),
               { point: [4.9, 0], label: '도서관', color: 2 },
             ],
           },
@@ -241,8 +257,9 @@ export function logicScene(id: string, state: VisualState): VisualScene {
             ],
             markers: stations.map((point, i) => ({
               point,
-              label: ['학교', '시장', '역', '공원', '도서관'][i],
-              color: i > 2 ? 2 : 0,
+              label: STOPS[i].label,
+              color: STOPS[i].color,
+              shape: STOPS[i].transfer ? ('diamond' as const) : undefined,
             })),
           },
         ],
@@ -252,7 +269,7 @@ export function logicScene(id: string, state: VisualState): VisualScene {
           fact('A∩C', '∅'),
           fact('전체 정류장', '5개'),
         ],
-        note: '정류장 소속 관계를 나타낸 가상 그림입니다. 원 면적은 개수와 비례하지 않으며 운행 시간·방향은 반영하지 않습니다.',
+        note: '마름모는 두 노선에 함께 속한 환승 정류장입니다. 정류장 소속 관계를 나타낸 가상 그림이며, 원 면적은 개수와 비례하지 않고 운행 시간·방향은 반영하지 않습니다.',
       };
     }
     case 'infinite-cardinality':

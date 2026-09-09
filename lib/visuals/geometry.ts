@@ -531,6 +531,14 @@ export function geometryScene(id: string, state: VisualState): VisualScene {
                 dashed: true,
               },
             ],
+            description:
+              '표본 63개 중 도달 ' +
+              covered +
+              '개, 그중 두 공유기 모두에 도달 ' +
+              both +
+              '개, 미도달 ' +
+              (63 - covered) +
+              '개.',
             markers: samples.map(({ point, count }) => ({
               point,
               color: count === 0 ? 4 : count === 1 ? 0 : 2,

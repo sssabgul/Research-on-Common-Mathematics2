@@ -90,6 +90,7 @@ function Plot({ diagram, id }: { diagram: PlotDiagram; id: string }) {
       >
         <title id={id + '-title'}>{diagram.title}</title>
         <desc id={id + '-desc'}>
+          {diagram.description ? diagram.description + ' ' : ''}
           {axes
             ? '가로축 ' +
               (diagram.xLabel ?? 'x') +

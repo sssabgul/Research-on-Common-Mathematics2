@@ -1,5 +1,44 @@
 # 작업 체크포인트 — 공통수학2 탐구실 시각자료·탐구 활동
 
+## 협업 상태
+
+### 현재 상태
+
+- 최신 작업: Claude Code의 커밋 `45c6b3d` 후속 수정과 협업 문서를 Codex가 자동 검사하고 `main`에 커밋·푸시했다.
+- 마지막 작업 모델: Codex
+- 완료 여부: `git diff --check`, `npm run check`, `tsc`, `lint`, `format:check`, production `build`와 postbuild가 통과했다. 브라우저 실제 조작과 스크린리더 검증은 하지 않았다.
+- 다음 권장 작업: 아래 `미검증 목록`의 브라우저·육안·스크린리더 확인을 진행한다. 특히 `self-inverse`에서 `6/x` 선택 시 x=0 제외 동작을 확인한다.
+
+### 미검증 목록
+
+Claude Code가 이번 세션에서 직접 수정한 항목이다. 자기가 고친 것을 자기가 검증 완료로
+처리하지 않는다. Codex가 확인한 항목은 해당 줄을 삭제한다.
+
+- [ ] `lib/visuals/types.ts` · `lib/topic-visuals.ts` · `components/visuals/activity.tsx` — 주제별 하드코딩을 `excludeWhen` 데이터로 교체. `self-inverse`에서 `6/x`의 x=0을 막는 UI 동작이 리팩터링 전과 같은지 브라우저 확인 필요.
+- [ ] `lib/visuals/logic.ts` — 버스 환승 정류장을 마름모로 구분(`wifi-coverage`와 같은 규약). 육안 확인 필요.
+- [ ] `lib/visuals/geometry.ts` · `components/visuals/diagrams.tsx` — `PlotDiagram.description`으로 `wifi-coverage`의 스크린리더 설명 보강. 실제 스크린리더 확인 필요.
+
+### 최근 작업 기록
+
+#### 2026-09-09 11:25 KST — Codex
+
+- 요청: `Research-on-Common-Mathematics2`의 현재 변경사항을 커밋하고 원격 저장소에 푸시.
+- 수행한 작업: 스테이징된 후속 수정과 협업 문서를 검토하고 필수 검사 및 추가 포맷 검사를 실행했다. 포맷 검사에서 발견된 `CLAUDE.md` 한 파일을 oxfmt로 정리한 뒤 전체 변경을 `main`에 커밋하고 `origin/main`에 푸시했다.
+- 변경 파일: `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `app/globals.css`, `components/visuals/activity.tsx`, `components/visuals/diagrams.tsx`, `lib/topic-visuals.ts`, `lib/visuals/geometry.ts`, `lib/visuals/logic.ts`, `lib/visuals/types.ts`, `package.json`, `scripts/check-export.mjs`, `scripts/check-visuals.mjs`.
+- 실행한 검사와 실제 결과: `git diff --cached --check` 통과. `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint` 통과. `npm.cmd run format:check`는 최초 샌드박스에서 `spawn EPERM`, 제한 밖 재실행에서 `CLAUDE.md` 포맷 문제로 실패했고 파일 정리 후 재실행해 통과. `npm.cmd run build`는 최초 샌드박스에서 `spawn EPERM` 및 네이티브 모듈 로딩 제한으로 실패했고 제한 밖 재실행에서 production build와 postbuild 모두 통과했다.
+- 발견 / 수정한 문제: `CLAUDE.md`의 프로젝트 포맷 규칙 불일치와 닫히지 않은 예시 코드 블록을 수정했다. 빌드의 최초 실패는 코드 결함이 아니라 샌드박스 하위 프로세스 제한이었음을 재실행으로 확인했다.
+- 남은 작업과 다음 모델이 확인할 것: `self-inverse`의 x=0 제외 동작, 버스 환승 정류장 마름모 표시, `wifi-coverage` 스크린리더 설명은 브라우저/보조기술로 직접 확인하지 않았다.
+
+#### 2026-09-09 09:21 KST — Codex
+
+- 요청과 수행 내용: 별도 자동화 없이 Codex와 Claude Code가 매 작업 시작 전에 `PROGRESS.md`와 Git 상태를 확인하고, 종료 전에 실제 작업·검사 결과를 다시 기록하도록 협업 지침을 작성했다.
+- 변경 파일: `AGENTS.md` 신규, `CLAUDE.md` 신규, `PROGRESS.md` 협업 섹션 추가.
+- 실행한 검사: `Get-ChildItem`과 `rg`로 세 파일명, 작업 전 읽기·작업 후 기록 지침, `@AGENTS.md` 가져오기, Markdown 제목 구조를 확인했다. `git diff --check`는 종료 코드 0으로 통과했다. 애플리케이션 코드를 변경하지 않았으므로 앱 검사와 빌드는 실행하지 않았다.
+- 발견하거나 해결한 문제: 기존 상세 체크포인트의 Git 상태는 과거 작업 당시의 기록이며 현재 저장소와 다를 수 있다. 최신 협업 상태와 실제 저장소를 우선하도록 명시했다.
+- 남은 작업: Claude Code에서 `/memory`로 `CLAUDE.md`와 가져온 `AGENTS.md`의 실제 로드 여부를 확인하고 이번 문서 변경을 독립 검증한다. `/memory`는 Claude Code 세션 안에서 실행해야 하므로 Codex에서는 실행하지 않았다.
+
+> 아래 내용은 기존 구현의 상세 체크포인트다. 여기에 기록된 Git 상태와 검사 결과는 작성 당시의 스냅샷이며, 현재 상태는 위 협업 상태와 실제 저장소를 기준으로 판단한다.
+
 최종 갱신: 2026-09-09 KST. 최신 사용자 구현 재개 요청, 실제 저장소, Git 상태, 실행한 검사 결과를 기준으로 기록했다.
 프로젝트 루트: C:\Users\user\Desktop\웹앱들\Research-on-Common-Mathematics2\Research-on-Common-Mathematics2
 
@@ -32,10 +71,10 @@
 
 ### 제외 대상 — 정확히 2개
 
-| 전체 주제 키 | 주제명 | 처리 |
-| --- | --- | --- |
-| geometry/section-point/bezier | 내분을 반복하면 곡선이 만들어질까? | 기존 BezierPlayground와 본문을 유지하고 새 활동을 중복 추가하지 않는다. |
-| logic/propositions/even-square-proof | 제곱이 짝수이면 원래 수도 짝수일까? | 기존 본문을 그대로 두고 새 시각자료·활동을 추가하지 않는다. |
+| 전체 주제 키                         | 주제명                              | 처리                                                                    |
+| ------------------------------------ | ----------------------------------- | ----------------------------------------------------------------------- |
+| geometry/section-point/bezier        | 내분을 반복하면 곡선이 만들어질까?  | 기존 BezierPlayground와 본문을 유지하고 새 활동을 중복 추가하지 않는다. |
+| logic/propositions/even-square-proof | 제곱이 짝수이면 원래 수도 짝수일까? | 기존 본문을 그대로 두고 새 시각자료·활동을 추가하지 않는다.             |
 
 처음의 “명제에서 증명·논증하는 부분 제외”라는 지시는 사용자가 나중에 **“증명, 논증 중 ‘제곱이 짝수이면 원래 수도 짝수일까?’만 빼고 다 추가”**로 수정했다. 따라서 명제 소단원 전체 또는 kind가 증명·논증인 주제 전체를 제외하면 안 된다. 광고의 양화사, 절대부등식, 가격과 매출, 무한 집합, 도형의 증명 주제, 자기역함수, 평균속력도 모두 포함한다.
 
@@ -181,7 +220,7 @@
 3. 단원별 순수 계산 및 공통 좌표·정의역 모델을 만들었다.
 4. 공통 그림·벤다이어그램·대응도·막대·입력·결과 렌더러를 만들었다.
 5. 대표 취향 집합·통학 거점·주차요금의 연결을 먼저 확인했다.
-6. 도형 01~16 → 집합/명제 17~26 → 함수 27~41의 각 내용을 구현했다.
+6. 도형 01~~16 → 집합/명제 17~~26 → 함수 27~41의 각 내용을 구현했다.
 7. 공통 진입점을 상세 페이지 헤더 뒤·목차 앞에 연결하고 새 스타일을 추가했다.
 8. 등록부/수학/기본·경계 상태 검사와 정적 산출물 검사를 추가했다.
 9. check → TypeScript → lint → build/postbuild를 통과하고 발견한 결함을 수정했다.
@@ -189,27 +228,27 @@
 
 ### 현재 변경 파일과 각각의 목적
 
-| 파일/컴포넌트 | Git 상태 | 실제 역할/변경 목적 |
-| --- | --- | --- |
-| app/[unitId]/[subunitId]/[topicId]/page.tsx | 수정 | TopicVisual import 및 렌더링 2줄 추가. 기존 베지어 분기·목차·본문·메타데이터·정적 경로 유지. |
-| app/globals.css | 수정 | .topic-visual/.visual-* 범위의 카드·그림·입력·모바일·컨테이너·인쇄 스타일 추가. 기존 스타일 유지. |
-| scripts/check-curriculum.mjs | 수정 | 기존 검사에 check-visuals.mjs import 1줄 추가. |
-| scripts/check-export.mjs | 수정 | 기존 HTML+RSC+404 검사에 41개 기본 자료와 제외 2개 검사 추가. Netlify Node 22.14에서 실행할 수 있도록 .ts import 없음. |
-| README.md | 수정 | 41개 자료의 사용법·등록 구조·검사·유지보수 안내 추가. 기존 실행·배포 안내 유지. |
-| PROGRESS.md | 신규 비추적 | 상태 복구, 완료/미실행 구분, 변경 목적, 41개 개별 명세와 재개 절차. |
-| lib/topic-visuals.ts | 신규 비추적 | 전체 경로 41개 등록, 정적/조작형, 제목·관찰 질문·초기값·컨트롤, 제외 두 경로. |
-| lib/visuals/types.ts | 신규 비추적 | 자료/입력/그림 판별 공용체, 상태, 좌표, 사실·표 모델. |
-| lib/visuals/shared.ts | 신규 비추적 | 숫자 표시, 상태 값 읽기, 표본·거리·집합 텍스트, 정확한 눈금 간격. |
-| lib/visuals/geometry.ts | 신규 비추적 | 도형 16개 순수 계산·그림 설정, 충돌·원·위치·변환. |
-| lib/visuals/logic.ts | 신규 비추적 | 집합/명제 10개 순수 계산·그림 설정, 집합 상수·진리·매출·절대거리. |
-| lib/visuals/functions.ts | 신규 비추적 | 함수 15개 순수 계산·그림 설정, 합성·경계·경제·유리/무리함수. |
-| components/topic-visual.tsx | 신규 비추적 | 정확한 제외 처리, 등록 조회, 단원별 정적/조작형 연결, 상단 카드·관찰 질문. |
-| components/visuals/activity.tsx | 신규 비추적 | 공통 로컬 상태, native 입력·라벨·현재값·초기화, 자기역함수 0 제외 전환. |
-| components/visuals/diagrams.tsx | 신규 비추적 | SceneView 및 SVG/HTML 공통 그림·범례·결과·표 렌더링. |
-| components/visuals/geometry-activity.tsx | 신규 비추적 | 도형 클라이언트 진입점. 정의 데이터와 geometryScene 연결. |
-| components/visuals/logic-activity.tsx | 신규 비추적 | 집합/명제 클라이언트 진입점. 정의 데이터와 logicScene 연결. |
-| components/visuals/function-activity.tsx | 신규 비추적 | 함수 클라이언트 진입점. 정의 데이터와 functionScene 연결. |
-| scripts/check-visuals.mjs | 신규 비추적 | 정확한 41개 키·정적 9개·제외 2개·197개 상태, 입력 경계·수학·기존 예제 일치 검사. |
+| 파일/컴포넌트                               | Git 상태    | 실제 역할/변경 목적                                                                                                    |
+| ------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| app/[unitId]/[subunitId]/[topicId]/page.tsx | 수정        | TopicVisual import 및 렌더링 2줄 추가. 기존 베지어 분기·목차·본문·메타데이터·정적 경로 유지.                           |
+| app/globals.css                             | 수정        | .topic-visual/.visual-* 범위의 카드·그림·입력·모바일·컨테이너·인쇄 스타일 추가. 기존 스타일 유지.                      |
+| scripts/check-curriculum.mjs                | 수정        | 기존 검사에 check-visuals.mjs import 1줄 추가.                                                                         |
+| scripts/check-export.mjs                    | 수정        | 기존 HTML+RSC+404 검사에 41개 기본 자료와 제외 2개 검사 추가. Netlify Node 22.14에서 실행할 수 있도록 .ts import 없음. |
+| README.md                                   | 수정        | 41개 자료의 사용법·등록 구조·검사·유지보수 안내 추가. 기존 실행·배포 안내 유지.                                        |
+| PROGRESS.md                                 | 신규 비추적 | 상태 복구, 완료/미실행 구분, 변경 목적, 41개 개별 명세와 재개 절차.                                                    |
+| lib/topic-visuals.ts                        | 신규 비추적 | 전체 경로 41개 등록, 정적/조작형, 제목·관찰 질문·초기값·컨트롤, 제외 두 경로.                                          |
+| lib/visuals/types.ts                        | 신규 비추적 | 자료/입력/그림 판별 공용체, 상태, 좌표, 사실·표 모델.                                                                  |
+| lib/visuals/shared.ts                       | 신규 비추적 | 숫자 표시, 상태 값 읽기, 표본·거리·집합 텍스트, 정확한 눈금 간격.                                                      |
+| lib/visuals/geometry.ts                     | 신규 비추적 | 도형 16개 순수 계산·그림 설정, 충돌·원·위치·변환.                                                                      |
+| lib/visuals/logic.ts                        | 신규 비추적 | 집합/명제 10개 순수 계산·그림 설정, 집합 상수·진리·매출·절대거리.                                                      |
+| lib/visuals/functions.ts                    | 신규 비추적 | 함수 15개 순수 계산·그림 설정, 합성·경계·경제·유리/무리함수.                                                           |
+| components/topic-visual.tsx                 | 신규 비추적 | 정확한 제외 처리, 등록 조회, 단원별 정적/조작형 연결, 상단 카드·관찰 질문.                                             |
+| components/visuals/activity.tsx             | 신규 비추적 | 공통 로컬 상태, native 입력·라벨·현재값·초기화, 자기역함수 0 제외 전환.                                                |
+| components/visuals/diagrams.tsx             | 신규 비추적 | SceneView 및 SVG/HTML 공통 그림·범례·결과·표 렌더링.                                                                   |
+| components/visuals/geometry-activity.tsx    | 신규 비추적 | 도형 클라이언트 진입점. 정의 데이터와 geometryScene 연결.                                                              |
+| components/visuals/logic-activity.tsx       | 신규 비추적 | 집합/명제 클라이언트 진입점. 정의 데이터와 logicScene 연결.                                                            |
+| components/visuals/function-activity.tsx    | 신규 비추적 | 함수 클라이언트 진입점. 정의 데이터와 functionScene 연결.                                                              |
+| scripts/check-visuals.mjs                   | 신규 비추적 | 정확한 41개 키·정적 9개·제외 2개·197개 상태, 입력 경계·수학·기존 예제 일치 검사.                                       |
 
 ### 참조·유지한 기존 파일
 
@@ -319,7 +358,7 @@
 
 - 주제 키: geometry/circle/wifi-coverage
 - 형태/상태: 조작형 / 구현 완료.
-- 구현한 시각자료: 8×6 교실, 공유기 (2,3),(6,3), 두 도달 원, x=0~8 및 y=0~6 정수 격자 표본 63개를 표시한다. 미도달·한 공유기·두 공유기 도달을 구분한다.
+- 구현한 시각자료: 8×6 교실, 공유기 (2,3),(6,3), 두 도달 원, x=0~~8 및 y=0~~6 정수 격자 표본 63개를 표시한다. 미도달·한 공유기·두 공유기 도달을 구분한다.
 - 구현한 탐구/조작 활동: 반경 2~4, 간격 0.1, 기본 3. 도달 표본 개수와 63개 중 비율을 갱신한다. 공유기 수·좌표 변경은 이 버전에서 추가하지 않는다.
 - 기본값/검산: 기본 r=3에서 49/63개, 약 77.8% 도달. 원래 계획의 53/63·84.1%는 실제 좌표를 검산해 바로잡았다. 중복 도달점은 7개이며 행별 도달 개수는 [2,9,9,9,9,9,2]이다. (4,3)은 중복 도달, (0,0)은 미도달이다.
 - 유지할 기존 내용/예외: 실제 전파를 이상화한 원 모형과 가운데 중복이 모서리 도달을 보장하지 않는 본문을 유지한다.
@@ -676,4 +715,3 @@
 8. 화면 검증을 요청받았다면 브라우저 도구/스킬의 현재 조건을 확인하고 실제 조작·반응형·인쇄를 확인한다. 미실행 항목을 통과로 기록하지 않는다.
 9. 배포·커밋·푸시는 현재 미실행임을 기억하고 해당 사용자 요청이 있을 때 진행한다. 기존 Netlify 설정이나 주소를 임의로 바꾸지 않는다.
 10. 마무리 시 git status / git diff를 확인하고 이 문서의 실제 변경·검사·남은 작업만 갱신한다.
-

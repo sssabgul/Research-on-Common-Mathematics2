@@ -1,6 +1,13 @@
 export type Point = [number, number];
 export type VisualState = Record<string, number | string | string[]>;
 type ControlBase = { id: string; label: string };
+// 다른 컨트롤이 특정 값일 때 정의역에서 빠지는 값들. 서버 컴포넌트가 정의를
+// 클라이언트로 넘기므로 함수가 아닌 직렬화 가능한 데이터여야 한다.
+export type ExcludeWhen = {
+  control: string;
+  equals: string | number;
+  values: number[];
+};
 export type VisualControl =
   | (ControlBase & {
       kind: 'range';
@@ -9,6 +16,7 @@ export type VisualControl =
       step: number;
       unit?: string;
       presets?: number[];
+      excludeWhen?: ExcludeWhen;
     })
   | (ControlBase & {
       kind: 'choice';
@@ -41,6 +49,8 @@ export type PlotDiagram = {
   xLabel?: string;
   yLabel?: string;
   axes?: boolean;
+  // 라벨 없는 마커만 있는 그림은 <desc>가 비므로 요약을 직접 전달한다.
+  description?: string;
   lines?: PlotLine[];
   circles?: {
     center: Point;

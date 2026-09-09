@@ -1,4 +1,5 @@
 import type {
+  ExcludeWhen,
   VisualControl,
   VisualDefinition,
   VisualState,
@@ -13,6 +14,7 @@ const range = (
   step: number,
   unit = '',
   presets?: number[],
+  excludeWhen?: ExcludeWhen,
 ): VisualControl => ({
   kind: 'range',
   id,
@@ -22,6 +24,7 @@ const range = (
   step,
   unit,
   presets,
+  excludeWhen,
 });
 const choice = (
   id: string,
@@ -401,7 +404,11 @@ export const topicVisuals: VisualDefinition[] = [
         ['shift', 'x+1'],
         ['reciprocal', '6/x'],
       ]),
-      range('x', '입력 x', -4, 4, 0.5),
+      range('x', '입력 x', -4, 4, 0.5, '', undefined, {
+        control: 'fn',
+        equals: 'reciprocal',
+        values: [0],
+      }),
     ],
   ),
   activity(
