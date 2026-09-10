@@ -28,9 +28,13 @@ if (!existsSync(OUT)) {
 }
 
 const sitemap = readFileSync('public/sitemap.xml', 'utf8');
-const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
-  (m) => new URL(m[1]).pathname,
+const canonicalUrls = new Map(
+  [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => [
+    new URL(m[1]).pathname,
+    m[1],
+  ]),
 );
+const paths = [...canonicalUrls.keys()];
 
 if (paths.length === 0) {
   console.error(
@@ -61,10 +65,62 @@ const detailedPaths = paths.filter(
   (path) => path.split('/').filter(Boolean).length === 3,
 );
 let visualCount = 0;
+let reportCount = 0;
 for (const path of detailedPaths) {
   const file = join(OUT, path.slice(1) + '.html');
   if (!existsSync(file)) continue;
   const html = readFileSync(file, 'utf8');
+  const reportButtons = [
+    ...html.matchAll(
+      /<a\b([^>]*\bdata-report-form="ready"[^>]*)>([\s\S]*?)<\/a>/g,
+    ),
+  ];
+  if (reportButtons.length !== 2) {
+    missing.push(path + ' → 상단·하단 보고서 작성 버튼 2개가 필요함');
+  } else {
+    const reportUrls = [];
+    for (const [, attributes, contents] of reportButtons) {
+      const attr = (name) =>
+        attributes.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+      if (
+        !contents.includes('탐구계획서 작성') ||
+        !attr('class')?.includes('print:hidden')
+      ) {
+        missing.push(path + ' → 보고서 버튼 문구·인쇄 제외 누락');
+      }
+      const rel = (attr('rel') ?? '').split(/\s+/);
+      if (
+        attr('target') !== '_blank' ||
+        !rel.includes('noopener') ||
+        !rel.includes('noreferrer') ||
+        !contents.includes('새 탭')
+      ) {
+        missing.push(path + ' → 보고서 링크의 새 탭 안내·속성 누락');
+      }
+      try {
+        const url = new URL((attr('href') ?? '').replaceAll('&amp;', '&'));
+        const entries = [...url.searchParams].filter(([key]) =>
+          /^entry\.\d+$/.test(key),
+        );
+        if (
+          url.origin !== 'https://docs.google.com' ||
+          !/^\/forms\/d\/(?:e\/)?[\w-]+\/viewform$/.test(url.pathname) ||
+          entries.length !== 3 ||
+          !entries.some(([, value]) => value === canonicalUrls.get(path))
+        ) {
+          missing.push(
+            path + ' → 보고서 양식 주소·사전 입력·정식 상세 주소 불일치',
+          );
+        }
+        reportUrls.push(url.href);
+      } catch {
+        missing.push(path + ' → 보고서 링크가 유효한 URL이 아님');
+      }
+    }
+    if (reportUrls.length === 2 && reportUrls[0] === reportUrls[1])
+      reportCount++;
+    else missing.push(path + ' → 상단·하단 보고서 연결 상태가 다름');
+  }
   const hasVisual = html.includes('data-topic-visual="' + path.slice(1) + '"');
   if (excludedVisuals.has(path)) {
     if (hasVisual) missing.push(path + ' → 제외 주제에 새 자료가 있음');
@@ -76,6 +132,8 @@ for (const path of detailedPaths) {
 }
 if (visualCount !== 41)
   missing.push('새 시각자료가 포함된 상세 HTML은 41개여야 함: ' + visualCount);
+if (reportCount !== detailedPaths.length)
+  missing.push('모든 상세 페이지에 상단·하단 보고서 연결이 필요함');
 
 if (!existsSync(join(OUT, '404.html')))
   missing.push('404 페이지 → 404.html 없음');
@@ -90,5 +148,5 @@ if (missing.length > 0) {
 }
 
 console.log(
-  `OK — 정적 페이지 ${paths.length}개 (HTML + RSC 페이로드) / 404 / 시각자료 ${visualCount}개 + 제외 ${excludedVisuals.size}개`,
+  `OK — 정적 페이지 ${paths.length}개 (HTML + RSC 페이로드) / 404 / 시각자료 ${visualCount}개 + 제외 ${excludedVisuals.size}개 / 보고서 연결 ${reportCount}개`,
 );

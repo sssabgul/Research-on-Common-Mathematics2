@@ -4,10 +4,13 @@
 
 ### 현재 상태
 
-- 최신 작업: Claude Code의 커밋 `45c6b3d` 후속 수정과 협업 문서를 Codex가 자동 검사하고 `main`에 커밋·푸시했다.
 - 마지막 작업 모델: Codex
-- 완료 여부: `git diff --check`, `npm run check`, `tsc`, `lint`, `format:check`, production `build`와 postbuild가 통과했다. 브라우저 실제 조작과 스크린리더 검증은 하지 않았다.
-- 다음 권장 작업: 아래 `미검증 목록`의 브라우저·육안·스크린리더 확인을 진행한다. 특히 `self-inverse`에서 `6/x` 선택 시 x=0 제외 동작을 확인한다.
+- 현재 작업: 작성 버튼·Google Forms 사전 입력 연결 및 관련 검사·문서를 `main`에 커밋하고 `origin/main`에 푸시.
+- 완료 상태: 변경 코드와 직접 영향 범위에서 보고할 결함을 발견하지 못했고, 검증된 변경을 커밋·푸시했다.
+- 이번 세션 검사: `git diff --check`, `check`, `tsc`, `lint`, `format:check`, 빌드+postbuild 통과.
+- 공개 폼: 익명 HTTP 200과 실제 단원·주제·링크 문항 식별자, 10문항의 필수 9개·선택 1개를 이번 세션에 확인했다.
+- 검증 한계: 브라우저 화면·인쇄·스크린리더, 실제 응답 제출·시트 저장·권한은 이번 세션에 재검증하지 않았다. 아래 기존 미검증 항목은 유지한다.
+- 다음 권장 조치: 필요 시 화면 및 실제 제출·시트 저장 흐름을 별도로 검증한다. 배포는 별도 사용자 요청이 필요하다.
 
 ### 미검증 목록
 
@@ -17,8 +20,50 @@ Claude Code가 이번 세션에서 직접 수정한 항목이다. 자기가 고�
 - [ ] `lib/visuals/types.ts` · `lib/topic-visuals.ts` · `components/visuals/activity.tsx` — 주제별 하드코딩을 `excludeWhen` 데이터로 교체. `self-inverse`에서 `6/x`의 x=0을 막는 UI 동작이 리팩터링 전과 같은지 브라우저 확인 필요.
 - [ ] `lib/visuals/logic.ts` — 버스 환승 정류장을 마름모로 구분(`wifi-coverage`와 같은 규약). 육안 확인 필요.
 - [ ] `lib/visuals/geometry.ts` · `components/visuals/diagrams.tsx` — `PlotDiagram.description`으로 `wifi-coverage`의 스크린리더 설명 보강. 실제 스크린리더 확인 필요.
+- [ ] `app/[unitId]/[subunitId]/[topicId]/page.tsx` — 버튼·aria-label을 `탐구계획서 작성`으로 바꾼 diff에서 빠졌던 안내 문단의 "보고서로 남겨 보세요"를 "계획서로 남겨 보세요"로 수정. `tsc`·`lint`·`check`·`format:check`·`build`+`postbuild` 재실행으로 통과 확인했으나 브라우저 육안 확인은 아직 없음.
 
 ### 최근 작업 기록
+
+#### 2026-09-10 09:16 KST — Codex
+
+- 요청: 앞으로 “커밋, 푸쉬”를 이 저장소의 GitHub 커밋·푸시 요청으로 해석하고, 현재 변경사항을 커밋·푸시.
+- 수행한 작업: 작성 버튼·Google Forms 사전 입력 연결과 관련 검사·문서 변경을 다시 검증하고 `main`에 커밋한 뒤 `origin/main`에 푸시했다.
+- 변경 파일: `PROGRESS.md`, `README.md`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `components/report-form-button.tsx`, `lib/report-form.ts`, `scripts/check-report-form.mjs`, `scripts/check-curriculum.mjs`, `scripts/check-export.mjs`.
+- 실행한 검사와 실제 결과: `git diff --check`, `git diff --cached --check`, `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`, `npm.cmd run format:check`, `npm.cmd run build`와 postbuild 통과.
+- 발견 / 수정한 문제: 최초 포맷 검사에서 `PROGRESS.md` 불일치를 발견해 oxfmt로 정리했다.
+- 남은 작업과 다음 모델이 확인할 것: 브라우저 화면·모바일·인쇄·스크린리더와 실제 응답 제출·시트 저장은 이번 커밋 직전에 재검증하지 않았다. 기존 미검증 목록을 유지한다.
+
+#### 2026-09-10 09:12 KST — Codex
+
+- 요청: 현재 변경사항과 직접 영향 범위를 독립 교차검증하고 필요한 검사를 직접 실행하여 문제만 등급별 보고.
+- 수행한 작업: 사용자 지시, PROGRESS.md, unstaged/staged diff와 신규 파일을 대조했다. 공통 상세 페이지·버튼·URL 생성·검사 스크립트를 검토하고 새 빌드 산출물의 43개 상세 페이지·86개 링크를 별도 assertion으로 확인했다. 실제 공개 폼을 익명 GET으로 읽어 세 entry와 문항 제목의 대응 및 필수 9개·선택 1개를 확인했다.
+- 변경 파일: `PROGRESS.md`만 갱신. 기존 애플리케이션·문서 변경은 보존했다.
+- 실행한 검사와 실제 결과: `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint` 통과. `npm.cmd run build` 최초 실행은 샌드박스의 spawn EPERM·네이티브 의존성 로딩 오류로 실패했고 제한 밖 재실행에서 빌드 및 postbuild 통과(53개 사전 렌더링 경로, 정상 52개 HTML+RSC, 43개 보고서 연결). 별도 Node assertion으로 모든 버튼의 단원·주제·정식 링크 값 및 계획서 안내 문구 확인 통과. 공개 폼 HTTP 200 확인. 웹 도구의 폼 열기는 safe-to-open 오류로 실패했으며 Node fetch로 읽기 확인했다. `git diff --check`, `git diff --cached --check` 통과.
+- 발견 / 수정한 문제: 검토 범위에서 보고할 코드 결함을 발견하지 못했다. 코드 수정 없음.
+- 남은 작업과 다음 모델이 확인할 것: 브라우저 화면·모바일·인쇄·스크린리더는 이번 요청에서 명시한 브라우저 검사가 아니므로 실행하지 않았다. 외부 응답 제출·시트 저장·권한은 재검증하지 않았으며 과거 결과를 이번 세션의 성공으로 간주하지 않았다. 포맷 검사는 필수 검사에 해당하지 않아 생략했다. 기존 시각자료 미검증 항목은 현재 diff 범위 밖이므로 유지했다. 커밋·푸시·배포 미실행.
+
+#### 2026-09-10 08:36 KST — Codex
+
+- 요청: `탐구보고서 작성` 버튼을 `탐구계획서 작성`으로 변경.
+- 수행한 작업: 공통 버튼 문구를 바꿔 43개 상세 페이지의 상단·하단에 적용했다. 안내 영역의 접근성 이름, 정적 산출물 검사 기대 문구와 README의 버튼 설명도 맞췄다. 기존 구글폼·응답 시트 연결과 문항은 유지했다.
+- 변경 파일: `components/report-form-button.tsx`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `scripts/check-export.mjs`, `README.md`, `PROGRESS.md`. 이전 작업의 미커밋 변경을 보존했다.
+- 실행한 검사와 실제 결과: `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`가 모두 종료 코드 0으로 통과했다. 문구 변경이므로 빌드·브라우저·외부 폼 제출 검증은 재실행하지 않았다.
+- 발견 / 수정한 문제: 정적 산출물 검사가 이전 버튼 문구를 기대하므로 새 문구로 수정했다.
+- 남은 작업과 다음 모델이 확인할 것: 커밋·푸시·배포는 실행하지 않았다. 추후 빌드 시 새 버튼 문구에 대한 postbuild 검사가 실행된다. 기존 구글폼 및 시트 설정·검증 근거는 아래 기록을 참조한다.
+
+#### 2026-09-09 23:47 KST — Codex
+
+- 요청: 미완료 작업을 이어서 43개 주제의 `탐구보고서 작성` 버튼, 단원·주제·정식 상세 링크 사전 입력, 공통 구글폼 및 전용 응답 스프레드시트 연결을 구현하고 검증.
+- 수행한 작업: 상세 페이지 공통 템플릿의 상단과 본문 끝에 새 탭 안내·인쇄 숨김·키보드 초점 스타일을 갖춘 버튼을 추가했다. `lib/report-form.ts`에 실제 공개 폼 주소와 세 `entry` 식별자를 관리하고 `URLSearchParams`로 인코딩한다. 본문 끝에 자동 입력 내용 확인 안내를 추가했다. 학교 계정의 본인 인증 완료 후 `공통수학2 탐구보고서`를 생성·게시하고 지정한 10문항, 필수 9개·선택 1개, 도움말 및 완료 문구를 설정했다. 이메일 수집·응답 수정·1회 제한·전체 응답 요약 공개를 끄고 다른 응답 제출을 허용했다. Google Forms 기본 기능으로 `공통수학2 탐구보고서 응답`에 연결했다.
+- 변경 파일: `README.md`, `PROGRESS.md`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `components/report-form-button.tsx` 신규, `lib/report-form.ts` 신규, `scripts/check-report-form.mjs` 신규, `scripts/check-curriculum.mjs`, `scripts/check-export.mjs`.
+- 실행한 검사와 실제 결과: 실제 폼 설정을 반영한 뒤 `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`가 종료 코드 0으로 통과했다. 43개 전체의 사전 입력값·정식 주소·한글 및 특수문자 인코딩·잘못된 설정 거부를 검사했다. `npm.cmd run build`는 최초 샌드박스에서 `spawn EPERM` 및 네이티브 모듈 로딩 제한으로 실패했고 제한 밖 재실행에서 통과했다. postbuild는 53개 사전 렌더링 경로, 정상 페이지 52개의 HTML+RSC 및 404, 시각자료 41개·예외 2개, 43개 상세 페이지마다 실제 보고서 링크 2개와 새 탭·인쇄 숨김 속성을 확인했다. oxfmt 최초 실행은 샌드박스의 `spawn EPERM`으로 실패했으며 제한 밖 재실행은 성공했고, 전체 `npm.cmd run format:check`도 통과했다. 익명 HTTP 요청에서 공개 폼이 로그인 화면으로 이동하지 않고 HTTP 200으로 열렸고 로컬 상세 페이지도 HTTP 200이었다.
+- 실제 응답 검증: 이름에 `연결 확인용 테스트`를 표시한 가상 응답 3건을 제출했다. `나의 생각`을 비웠을 때 필수 오류가 나타났고, 선택 문항을 비워도 제출되며, 같은 학번의 반복 제출은 새 행으로 저장됐다. 타임스탬프와 답변의 11열 대응, 줄바꿈·특수문자, `00101`·`00102` 학번의 앞자리 0 보존을 원본 및 보기 시트에서 확인했다. 마지막 3번째 응답은 보기 시트 생성 후 제출하여 날짜 형식과 행 추가가 자동 유지되는지 확인했다. 실제 학생 응답은 사용하지 않았고 테스트 응답은 삭제하지 않았다.
+- 발견 / 수정한 문제: Google Forms가 새 응답 행의 날짜 서식을 기본 `DATE_TIME`으로 덮어써 원본 열의 사용자 지정 형식만으로는 지속 유지되지 않았다. 지역 설정 변경 시도는 전체 날짜·숫자 표시에 영향을 주는 요청 밖 변경이라는 이유로 자동 승인 검토에서 거절되어 적용하지 않았다. 한국 지역(`ko_KR`)과 `Asia/Seoul`을 유지하고 같은 파일의 첫 탭 `보고서 보기`에 원본 11열을 자동 표시하는 수식을 추가해 `yyyy-MM-dd HH:mm:ss`를 유지했다. 원본 `설문지 응답 시트1`은 Forms의 저장 대상 그대로다. 보기 탭은 현재 응답 19,999건을 표시할 행을 확보했다. 스프레드시트 권한은 `ksan0213@seocho.sen.hs.kr` 소유자만 있고 공유되지 않았음을 확인했다.
+- 작성 링크: [공통수학2 탐구보고서](https://docs.google.com/forms/d/e/1FAIpQLSfAaihsVvH1jm56RMu6isd85Jz_z1_-ty_zB-WoQnlZj7LKlw/viewform).
+- 관리 링크: [구글폼 수정](https://docs.google.com/forms/d/1f4hKUoWHWL21dx7jv0avyZswiRNdIRHxxB4Ar0X3qNY/edit).
+- 응답 링크: [공통수학2 탐구보고서 응답 — 보고서 보기](https://docs.google.com/spreadsheets/d/1z0edoFnRAj02wHiLibB6V7J9QJhU_7SawtRye12inyI/edit?gid=1069028059#gid=1069028059).
+- 연결 식별자: 단원 `entry.12164861`, 주제 `entry.64204507`, 링크 `entry.1237976543`. 원본 시트 ID `693075112`, 보기 시트 ID `1069028059`. 재개 시 기존 파일을 확인하며 폼·시트를 중복 생성하지 않는다.
+- 남은 작업과 다음 모델이 확인할 것: 사이트 화면의 직접 조작·모바일·인쇄·스크린리더 검증은 실행하지 않았으며 정적 산출물 검사와 구글폼 실제 제출 검증을 구분한다. 사이트 배포·커밋·푸시는 사용자 별도 요청 전까지 하지 않는다. 응답 확인은 날짜 형식을 유지하는 `보고서 보기`를 사용하며, 19,999건을 넘으면 보기 탭의 행을 확장한다. 테스트 응답 3건은 식별 가능한 상태로 남아 있다. 기존 시각자료 미검증 목록은 이번 요청 범위 밖이므로 유지한다.
 
 #### 2026-09-09 11:25 KST — Codex
 

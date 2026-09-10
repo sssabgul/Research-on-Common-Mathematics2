@@ -13,6 +13,7 @@ import { SEO_FILES } from './generate-seo-files.mjs';
 import './check-details.mjs';
 import './check-bezier.mjs';
 import './check-visuals.mjs';
+import './check-report-form.mjs';
 
 const TONES = ['blue', 'purple', 'orange'];
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

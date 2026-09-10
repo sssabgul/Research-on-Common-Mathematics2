@@ -7,9 +7,11 @@ import { CopyLinkButton } from '@/components/copy-link-button';
 import { DetailFigure } from '@/components/detail-figure';
 import { MathExpression } from '@/components/math-expression';
 import { PrintButton } from '@/components/print-button';
+import { ReportFormButton } from '@/components/report-form-button';
 import { BezierPlayground } from '@/components/bezier-playground';
 import { TopicVisual } from '@/components/topic-visual';
 import { allTopics, findTopic, topicHref } from '@/lib/curriculum-utils';
+import { buildReportFormUrl } from '@/lib/report-form';
 import { findTopicDetail } from '@/lib/topic-details';
 import { toneStyles } from '@/lib/tone';
 import 'katex/dist/katex.min.css';
@@ -87,6 +89,7 @@ export default async function TopicPage({
       '상세 원고 누락: ' + [unitId, subunitId, topicId].join('/'),
     );
   const { unit, subunit, topic, href } = found;
+  const reportFormUrl = buildReportFormUrl(found);
   const { example } = detail;
   return (
     <article className="detail-document mx-auto max-w-[880px]">
@@ -133,6 +136,7 @@ export default async function TopicPage({
           </Link>
           <CopyLinkButton href={href} topicTitle={topic.title} />
           <PrintButton />
+          <ReportFormButton href={reportFormUrl} />
         </div>
       </header>
       {unitId === 'geometry' &&
@@ -293,6 +297,16 @@ export default async function TopicPage({
           </ul>
         </DetailSection>
       </div>
+      <section
+        aria-label="탐구계획서 작성 안내"
+        className="mt-7 rounded-2xl border border-[#007aff]/15 bg-[#eef6ff] p-5 print:hidden"
+      >
+        <p className="mb-3 text-base leading-7 text-[#145793]">
+          탐구한 내용과 나의 생각을 계획서로 남겨 보세요. 양식에 자동 입력된
+          단원·주제·링크를 확인해 주세요.
+        </p>
+        <ReportFormButton href={reportFormUrl} />
+      </section>
       <Link
         href={topicHref(unitId, subunitId, topicId)}
         className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-base font-bold text-[#007aff] print:hidden"
