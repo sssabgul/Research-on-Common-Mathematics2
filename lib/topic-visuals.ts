@@ -79,6 +79,21 @@ export const EXCLUDED_VISUAL_KEYS = [
 ] as const;
 
 export const topicVisuals: VisualDefinition[] = [
+  figure(
+    'logic/sets/russell-paradox',
+    '두 가정이 모두 모순에 이르는 과정',
+    'R 자신에게 원소가 되는 조건을 적용하면 어떻게 되나요?',
+  ),
+  figure(
+    'functions/rational-irrational/matrix-composition',
+    '함수의 합성과 계수 행렬',
+    'g를 먼저 적용할 때 행렬은 어떤 순서로 곱하나요?',
+  ),
+  figure(
+    'functions/function/increasing-inverse-intersections',
+    '증가함수와 역함수의 교점',
+    '교점이 대각선 밖에 있다고 가정하면 증가 조건과 어떻게 충돌하나요?',
+  ),
   activity(
     'geometry/section-point/commute-hub',
     '인원 비율에 따라 움직이는 거점',

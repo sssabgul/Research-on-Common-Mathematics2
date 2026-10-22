@@ -82,6 +82,34 @@ export function revenue(discount: number, quantity: number) {
 }
 export function logicScene(id: string, state: VisualState): VisualScene {
   switch (id) {
+    case 'russell-paradox':
+      return {
+        diagrams: [
+          {
+            kind: 'flow',
+            title: 'R∈R이라고 가정',
+            steps: [
+              { label: '가정', value: 'R∈R' },
+              { label: 'R의 원소 조건', value: 'R∉R' },
+              { label: '결론', value: '가정과 모순' },
+            ],
+          },
+          {
+            kind: 'flow',
+            title: 'R∉R이라고 가정',
+            steps: [
+              { label: '가정', value: 'R∉R' },
+              { label: '조건에 맞으므로', value: 'R∈R' },
+              { label: '결론', value: '가정과 모순' },
+            ],
+          },
+        ],
+        facts: [
+          { label: '검토할 가정', value: 'R이 집합으로 존재한다' },
+          { label: '두 경우의 결론', value: '그런 집합 R은 존재할 수 없다' },
+        ],
+        note: 'R이 공집합이라는 뜻이 아닙니다. 자기 자신을 원소로 갖지 않는 모든 집합을 하나의 집합으로 모을 수 있다는 가정이 모순을 만듭니다.',
+      };
     case 'taste-recommendation': {
       const a = setValue(state, 'a'),
         b = setValue(state, 'b'),

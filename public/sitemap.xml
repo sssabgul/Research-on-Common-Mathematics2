@@ -151,6 +151,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://research-on-common-mathematics2.netlify.app/logic/sets/russell-paradox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://research-on-common-mathematics2.netlify.app/logic/sets/infinite-cardinality</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -221,12 +226,22 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://research-on-common-mathematics2.netlify.app/functions/function/increasing-inverse-intersections</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://research-on-common-mathematics2.netlify.app/functions/function/self-inverse</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://research-on-common-mathematics2.netlify.app/functions/function/discount-framing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://research-on-common-mathematics2.netlify.app/functions/rational-irrational/matrix-composition</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -130,8 +130,8 @@ for (const path of detailedPaths) {
     else visualCount++;
   }
 }
-if (visualCount !== 41)
-  missing.push('새 시각자료가 포함된 상세 HTML은 41개여야 함: ' + visualCount);
+if (visualCount !== 44)
+  missing.push('새 시각자료가 포함된 상세 HTML은 44개여야 함: ' + visualCount);
 if (reportCount !== detailedPaths.length)
   missing.push('모든 상세 페이지에 상단·하단 보고서 연결이 필요함');
 

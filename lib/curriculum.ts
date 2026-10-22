@@ -458,6 +458,22 @@ export const curriculumUnits: CurriculumUnit[] = [
             kind: '자료·조사',
           },
           {
+            id: 'russell-paradox',
+            title: '집합의 역설: 러셀의 역리와 거짓말쟁이 문장',
+            summary:
+              '자기 자신을 원소로 갖지 않는 모든 집합을 모으면 어떤 모순이 생길까요?',
+            question:
+              '자기 자신을 원소로 갖지 않는 집합들의 집합 R은 자기 자신을 원소로 가질까?',
+            method:
+              '거짓말쟁이 문장에서 출발해 R∈R과 R∉R 두 경우의 모순을 증명하고, 집합을 만드는 규칙의 제한을 살펴봅니다.',
+            career: '수학과 · 수리논리학 · 컴퓨터과학',
+            curriculum:
+              '집합의 표현 · 원소와 포함관계 · 귀류법 → 집합론의 기초(심화)',
+            level: '도전',
+            style: '집합론 · 역설',
+            kind: '증명·논증',
+          },
+          {
             id: 'infinite-cardinality',
             title: '무한 집합의 크기는 서로 다를 수 있을까?',
             summary:
@@ -700,6 +716,20 @@ export const curriculumUnits: CurriculumUnit[] = [
             kind: '설계·모델링',
           },
           {
+            id: 'increasing-inverse-intersections',
+            title: '증가함수와 역함수는 어디에서 만날까?',
+            summary: '증가함수와 역함수의 교점이 y=x 위에만 놓임을 증명합니다.',
+            question:
+              '역함수가 존재하는 증가함수는 왜 y=x 밖에서 역함수와 만날 수 없을까?',
+            method:
+              '교점 (a,b)에서 f(a)=b, f(b)=a를 얻고 a<b와 a>b를 증가 조건으로 배제합니다. 고정점과 감소함수 반례도 비교합니다.',
+            career: '수학과 · 수학교육 · 논리적 추론',
+            curriculum: '역함수 · 그래프의 대칭 · 증가함수 · 귀류법',
+            level: '도전',
+            style: '역함수 · 증명',
+            kind: '증명·논증',
+          },
+          {
             id: 'self-inverse',
             title: '두 번 적용하면 원래 값으로 돌아오는 함수는?',
             summary:
@@ -740,6 +770,22 @@ export const curriculumUnits: CurriculumUnit[] = [
         intro:
           '분수식과 제곱근으로 나타나는 관계를 비용, 속도, 빛과 공간 문제에서 해석합니다.',
         topics: [
+          {
+            id: 'matrix-composition',
+            title: '유리함수의 합성을 행렬의 곱으로 나타내기',
+            summary:
+              '일차분수함수의 네 계수를 행렬로 모아 합성과 행렬곱의 관계를 증명합니다.',
+            question:
+              'f(x)=(ax+b)/(cx+d) 꼴의 함수를 합성하면 왜 행렬의 곱과 같은 계수가 나올까?',
+            method:
+              '대입으로 합성식을 구하고 2×2 행렬곱과 비교합니다. 합성 순서와 약분 뒤에도 남겨야 하는 정의역 제외점을 확인합니다.',
+            career: '수학과 · 선형대수학 · 기하학',
+            curriculum:
+              '유리함수 · 합성함수 · 정의역 · 행렬의 곱(공통수학1 연계)',
+            level: '도전',
+            style: '행렬 · 함수의 합성',
+            kind: '증명·논증',
+          },
           {
             id: 'group-order-cost',
             title: '공동 주문 인원과 1인당 비용',

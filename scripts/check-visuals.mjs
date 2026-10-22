@@ -54,10 +54,13 @@ assert.deepEqual(
 const expected = allTopics
   .map(({ unit, subunit, topic }) => [unit.id, subunit.id, topic.id].join('/'))
   .filter((key) => !EXCLUDED_VISUAL_KEYS.includes(key));
-assert.equal(topicVisuals.length, 41);
-assert.equal(new Set(topicVisuals.map((v) => v.key)).size, 41);
+assert.equal(topicVisuals.length, 44);
+assert.equal(new Set(topicVisuals.map((v) => v.key)).size, 44);
 assert.deepEqual(new Set(topicVisuals.map((v) => v.key)), new Set(expected));
 const staticIds = [
+  'russell-paradox',
+  'matrix-composition',
+  'increasing-inverse-intersections',
   'centroid',
   'ramp-slope',
   'traditional-pattern',
@@ -420,7 +423,7 @@ for (const [min, max] of [
   assert.ok(ticks.length >= 2 && ticks.length <= 6);
 }
 console.log(
-  'OK — 시각자료 41개 (정적 9 / 조작형 32) / ' +
+  'OK — 시각자료 44개 (정적 12 / 조작형 32) / ' +
     sceneCount +
     '개 상태 / 정의역 제외 ' +
     excludeCount +

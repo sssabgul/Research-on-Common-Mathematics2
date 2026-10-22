@@ -76,6 +76,79 @@ const money = (value: number) => format(value) + '원';
 
 export function functionScene(id: string, state: VisualState): VisualScene {
   switch (id) {
+    case 'matrix-composition':
+      return {
+        diagrams: [
+          {
+            kind: 'flow',
+            title: 'x=1에서 g를 먼저, f를 나중에 적용',
+            steps: [
+              { label: '입력', value: '1' },
+              { label: 'g(x)=1/x', value: '1' },
+              { label: 'f(x)=(2x+1)/(x+1)', value: '3/2' },
+            ],
+          },
+        ],
+        facts: [
+          { label: 'f∘g에 대응하는 곱', value: 'AB의 두 행: (1,2), (1,1)' },
+          { label: '합성식', value: '(x+2)/(x+1), x≠0,−1' },
+        ],
+        table: {
+          caption: '순서에 따른 합성의 비교',
+          headers: ['적용 순서', '행렬곱', 'x=1의 출력'],
+          rows: [
+            ['g 다음 f', 'AB', '3/2'],
+            ['f 다음 g', 'BA', '2/3'],
+          ],
+        },
+        note: '행렬곱은 합성의 식을 나타냅니다. x=0은 정리된 식에 넣을 수 있어도 원래 g의 정의역에서 제외되므로 합성에서도 제외합니다.',
+      };
+    case 'increasing-inverse-intersections':
+      return {
+        diagrams: [
+          {
+            kind: 'plot',
+            title: 'f(x)=2x+1과 역함수 y=(x−1)/2',
+            bounds: [-3, 3, -3, 3],
+            equal: true,
+            description:
+              '증가하는 두 직선은 y=x 위의 점 (−1,−1)에서 만납니다. 일반적인 증명은 본문에서 확인합니다.',
+            lines: [
+              {
+                label: 'f(x)=2x+1',
+                points: [
+                  [-2, -3],
+                  [1, 3],
+                ],
+                color: 0,
+              },
+              {
+                label: 'f⁻¹(x)=(x−1)/2',
+                points: [
+                  [-3, -2],
+                  [3, 1],
+                ],
+                color: 1,
+              },
+              {
+                label: 'y=x',
+                points: [
+                  [-3, -3],
+                  [3, 3],
+                ],
+                color: 2,
+                dashed: true,
+              },
+            ],
+            markers: [{ point: [-1, -1], label: '(−1,−1)' }],
+          },
+        ],
+        facts: [
+          { label: '교점의 조건', value: 'f(a)=b, f(b)=a' },
+          { label: '증가 조건으로 얻는 결론', value: 'a=b' },
+        ],
+        note: '그림은 한 가지 예입니다. 모든 증가함수에 대한 논증은 두 부등식 경우를 배제하여 완성합니다. 교점이 없거나 여러 개일 수도 있습니다.',
+      };
     case 'data-key-function': {
       const mode = s(state, 'mapping'),
         reverse = mode === 'reverse';

@@ -1,0 +1,18 @@
+{
+  "name": "fun-math-propositions",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/build.mjs && node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "preview": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "katex": "0.18.6"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

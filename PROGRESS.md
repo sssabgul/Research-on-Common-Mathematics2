@@ -5,12 +5,10 @@
 ### 현재 상태
 
 - 마지막 작업 모델: Codex
-- 현재 작업: 작성 버튼·Google Forms 사전 입력 연결 및 관련 검사·문서를 `main`에 커밋하고 `origin/main`에 푸시.
-- 완료 상태: 변경 코드와 직접 영향 범위에서 보고할 결함을 발견하지 못했고, 검증된 변경을 커밋·푸시했다.
-- 이번 세션 검사: `git diff --check`, `check`, `tsc`, `lint`, `format:check`, 빌드+postbuild 통과.
-- 공개 폼: 익명 HTTP 200과 실제 단원·주제·링크 문항 식별자, 10문항의 필수 9개·선택 1개를 이번 세션에 확인했다.
-- 검증 한계: 브라우저 화면·인쇄·스크린리더, 실제 응답 제출·시트 저장·권한은 이번 세션에 재검증하지 않았다. 아래 기존 미검증 항목은 유지한다.
-- 다음 권장 조치: 필요 시 화면 및 실제 제출·시트 저장 흐름을 별도로 검증한다. 배포는 별도 사용자 요청이 필요하다.
+- 현재 작업: 증명 탐구 주제 3개와 별도 명제 탐구 앱을 검증해 `main`에 커밋하고 `origin/main`에 푸시.
+- 완료 상태: 총 46개 주제·시각자료 44개와 명제 탐구 앱 15개를 검증하고 커밋·푸시했다.
+- 이번 세션 검사: 루트 check·tsc·lint·build+postbuild, 별도 앱 check·build·JavaScript 구문 검사, Git diff 검사 통과. 전체 format:check는 보존 대상 원문 1개 때문에 미통과.
+- 다음 권장 조치: 새 3개 페이지와 별도 앱의 브라우저·모바일 표시 및 Claude Code 독립 리뷰. 배포는 미실행.
 
 ### 미검증 목록
 
@@ -24,63 +22,95 @@ Claude Code가 이번 세션에서 직접 수정한 항목이다. 자기가 고�
 
 ### 최근 작업 기록
 
-#### 2026-09-10 09:16 KST — Codex
+#### 2026-10-22 13:46 KST — Codex
 
-- 요청: 앞으로 “커밋, 푸쉬”를 이 저장소의 GitHub 커밋·푸시 요청으로 해석하고, 현재 변경사항을 커밋·푸시.
-- 수행한 작업: 작성 버튼·Google Forms 사전 입력 연결과 관련 검사·문서 변경을 다시 검증하고 `main`에 커밋한 뒤 `origin/main`에 푸시했다.
-- 변경 파일: `PROGRESS.md`, `README.md`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `components/report-form-button.tsx`, `lib/report-form.ts`, `scripts/check-report-form.mjs`, `scripts/check-curriculum.mjs`, `scripts/check-export.mjs`.
-- 실행한 검사와 실제 결과: `git diff --check`, `git diff --cached --check`, `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`, `npm.cmd run format:check`, `npm.cmd run build`와 postbuild 통과.
-- 발견 / 수정한 문제: 최초 포맷 검사에서 `PROGRESS.md` 불일치를 발견해 oxfmt로 정리했다.
-- 남은 작업과 다음 모델이 확인할 것: 브라우저 화면·모바일·인쇄·스크린리더와 실제 응답 제출·시트 저장은 이번 커밋 직전에 재검증하지 않았다. 기존 미검증 목록을 유지한다.
+- 요청: `npm run dev` 로컬 실행.
+- 수행한 작업: 프로젝트 상태와 진행 기록을 확인한 뒤 개발 서버를 실행했다.
+- 변경 파일: `PROGRESS.md`.
+- 실행한 검사와 실제 결과: `npm run dev` 성공. Vite 개발 서버가 `http://localhost:3000/`에서 실행 중이다.
+- 발견 / 수정한 문제: 없음. 기존 사용자 변경사항은 보존했다.
+- 남은 작업과 다음 모델이 확인할 것: 개발 서버 세션이 유지 중이며, 필요 시 브라우저에서 화면을 확인한다.
 
-#### 2026-09-10 09:12 KST — Codex
+#### 2026-10-22 13:46 KST — Codex
 
-- 요청: 현재 변경사항과 직접 영향 범위를 독립 교차검증하고 필요한 검사를 직접 실행하여 문제만 등급별 보고.
-- 수행한 작업: 사용자 지시, PROGRESS.md, unstaged/staged diff와 신규 파일을 대조했다. 공통 상세 페이지·버튼·URL 생성·검사 스크립트를 검토하고 새 빌드 산출물의 43개 상세 페이지·86개 링크를 별도 assertion으로 확인했다. 실제 공개 폼을 익명 GET으로 읽어 세 entry와 문항 제목의 대응 및 필수 9개·선택 1개를 확인했다.
-- 변경 파일: `PROGRESS.md`만 갱신. 기존 애플리케이션·문서 변경은 보존했다.
-- 실행한 검사와 실제 결과: `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint` 통과. `npm.cmd run build` 최초 실행은 샌드박스의 spawn EPERM·네이티브 의존성 로딩 오류로 실패했고 제한 밖 재실행에서 빌드 및 postbuild 통과(53개 사전 렌더링 경로, 정상 52개 HTML+RSC, 43개 보고서 연결). 별도 Node assertion으로 모든 버튼의 단원·주제·정식 링크 값 및 계획서 안내 문구 확인 통과. 공개 폼 HTTP 200 확인. 웹 도구의 폼 열기는 safe-to-open 오류로 실패했으며 Node fetch로 읽기 확인했다. `git diff --check`, `git diff --cached --check` 통과.
-- 발견 / 수정한 문제: 검토 범위에서 보고할 코드 결함을 발견하지 못했다. 코드 수정 없음.
-- 남은 작업과 다음 모델이 확인할 것: 브라우저 화면·모바일·인쇄·스크린리더는 이번 요청에서 명시한 브라우저 검사가 아니므로 실행하지 않았다. 외부 응답 제출·시트 저장·권한은 재검증하지 않았으며 과거 결과를 이번 세션의 성공으로 간주하지 않았다. 포맷 검사는 필수 검사에 해당하지 않아 생략했다. 기존 시각자료 미검증 항목은 현재 diff 범위 밖이므로 유지했다. 커밋·푸시·배포 미실행.
+- 요청: 현재 변경사항을 커밋하고 GitHub 원격 저장소에 푸시.
+- 수행한 작업: 증명 탐구 주제 3개와 별도 `apps/fun-propositions` 앱을 포함한 전체 변경을 다시 검사하고 `main`에 커밋한 뒤 `origin/main`에 푸시했다. 작업 중 개발 서버 실행 기록이 추가되어 최근 기록 수를 다시 맞추고, 가장 오래된 2026-09-10 09:16 및 12:13 기록을 각각 수정 없이 월별 로그 최상단으로 이동했다.
+- 변경 파일: `PROGRESS.md`, `docs/log/2026-09.md`, `lib/curriculum.ts`, `lib/details/foundations.ts`, `lib/topic-details.ts`, `lib/topic-visuals.ts`, `lib/visuals/functions.ts`, `lib/visuals/logic.ts`, `public/sitemap.xml`, `scripts/check-export.mjs`, `scripts/check-visuals.mjs`, `apps/fun-propositions/` 전체 신규 파일.
+- 실행한 검사와 실제 결과: `git diff --check`, `git diff --cached --check`, 루트 `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`, `npm.cmd run build`와 postbuild 통과. 별도 앱 `npm.cmd run check`, `npm.cmd run build`, `node --check src/app.js` 통과. production build는 56개 경로를 사전 렌더링했고 postbuild는 정상 정적 페이지 55개·시각자료 44개·보고서 연결 46개를 확인했다. `npm.cmd run format:check`는 제공 원문 `apps/fun-propositions/content/propositions.md`의 포맷 불일치 1건 때문에 미통과했다.
+- 발견 / 수정한 문제: 최초 포맷 검사에서 문서 4개의 불일치를 발견했다. 작업 기록·README·월별 로그 3개는 oxfmt로 정리했고 제공 원문은 내용 보존을 위해 수정하지 않았다.
+- 남은 작업과 다음 모델이 확인할 것: 브라우저·모바일·스크린리더와 Claude Code 독립 검증은 실행하지 않았다. 배포는 별도 사용자 요청 전까지 실행하지 않는다.
 
-#### 2026-09-10 08:36 KST — Codex
+#### 2026-10-22 13:44 KST — Codex
 
-- 요청: `탐구보고서 작성` 버튼을 `탐구계획서 작성`으로 변경.
-- 수행한 작업: 공통 버튼 문구를 바꿔 43개 상세 페이지의 상단·하단에 적용했다. 안내 영역의 접근성 이름, 정적 산출물 검사 기대 문구와 README의 버튼 설명도 맞췄다. 기존 구글폼·응답 시트 연결과 문항은 유지했다.
-- 변경 파일: `components/report-form-button.tsx`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `scripts/check-export.mjs`, `README.md`, `PROGRESS.md`. 이전 작업의 미커밋 변경을 보존했다.
-- 실행한 검사와 실제 결과: `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`가 모두 종료 코드 0으로 통과했다. 문구 변경이므로 빌드·브라우저·외부 폼 제출 검증은 재실행하지 않았다.
-- 발견 / 수정한 문제: 정적 산출물 검사가 이전 버튼 문구를 기대하므로 새 문구로 수정했다.
-- 남은 작업과 다음 모델이 확인할 것: 커밋·푸시·배포는 실행하지 않았다. 추후 빌드 시 새 버튼 문구에 대한 postbuild 검사가 실행된다. 기존 구글폼 및 시트 설정·검증 근거는 아래 기록을 참조한다.
+- 요청: 집합에 거짓말쟁이 문장과 러셀의 역설, 유리함수에 합성의 행렬 표현, 역함수에 증가함수와 역함수의 교점 증명 추가.
+- 수행한 작업: 독립 탐구 주제 3개를 목록·검색·상세·사이트맵·보고서 연결에 추가했다. 러셀의 두 경우 모순과 원소/부분집합 구별, 일차분수함수 합성의 일반식·행렬곱·정의역, 증가함수 교점의 귀류법·고정점·감소함수 반례를 작성했다. 각 주제에 단계별 활동과 정적 도식/그래프를 연결했다. 과거 기록 1개를 원문 그대로 월별 로그 최상단으로 옮겼다.
+- 변경 파일: lib/curriculum.ts, lib/details/foundations.ts(신규), lib/topic-details.ts, lib/topic-visuals.ts, lib/visuals/logic.ts, lib/visuals/functions.ts, public/sitemap.xml, scripts/check-visuals.mjs, scripts/check-export.mjs, PROGRESS.md, docs/log/2026-09.md. 기존 별도 앱 및 미커밋 작업 보존.
+- 실행한 검사와 실제 결과: npm run check 통과(상세 46개·수식 66개·시각자료 44개·200개 상태·보고서 연결 46개), npx tsc --noEmit --incremental false 및 npm run lint 통과. 최초 npm run build는 내부 서버 fetch failed로 정적 경로 생성 실패; 제한 밖 동일 명령 재실행에서 build+postbuild 통과(56개 사전 렌더링, 정상 55개 HTML+RSC). 변경 코드 oxfmt, git diff --check 통과. 별도 Node 검산으로 합성 순서별 14개 값·제외점 3개·고정점 예제 확인. 초기 rg의 Windows 파일 glob 조회는 실패하여 명시적 파일 경로로 다시 조회했다. Brown PDF 열기는 시간 초과했으며 Stanford·Hitchman 공개 자료 열기로 수학적 조건을 대조했다.
+- 발견 / 수정한 문제: 행렬 표현을 모든 유리함수로 일반화하지 않고 ad−bc≠0인 일차분수함수로 한정했다. 약분 뒤의 식에서 정의되는 입력도 원래 합성에서는 제외될 수 있음을 명시했다. 교점의 위치와 존재·개수를 구별하고 증가 조건을 전체 정의역에서의 엄격한 증가로 명시했다.
+- 남은 작업과 다음 모델이 확인할 것: 일반 논증은 직접 검토했으며 수치 검산은 증명을 대신하지 않는다. 브라우저·모바일·스크린리더와 Claude Code 독립 검증은 미실행. 정적 콘텐츠 추가로 새 테스트 파일은 만들지 않고 기존 전체 검사 및 빌드 검사를 확장했다. 커밋·푸시·배포 미실행.
 
-#### 2026-09-09 23:47 KST — Codex
+#### 2026-09-14 10:49 KST — Codex
 
-- 요청: 미완료 작업을 이어서 43개 주제의 `탐구보고서 작성` 버튼, 단원·주제·정식 상세 링크 사전 입력, 공통 구글폼 및 전용 응답 스프레드시트 연결을 구현하고 검증.
-- 수행한 작업: 상세 페이지 공통 템플릿의 상단과 본문 끝에 새 탭 안내·인쇄 숨김·키보드 초점 스타일을 갖춘 버튼을 추가했다. `lib/report-form.ts`에 실제 공개 폼 주소와 세 `entry` 식별자를 관리하고 `URLSearchParams`로 인코딩한다. 본문 끝에 자동 입력 내용 확인 안내를 추가했다. 학교 계정의 본인 인증 완료 후 `공통수학2 탐구보고서`를 생성·게시하고 지정한 10문항, 필수 9개·선택 1개, 도움말 및 완료 문구를 설정했다. 이메일 수집·응답 수정·1회 제한·전체 응답 요약 공개를 끄고 다른 응답 제출을 허용했다. Google Forms 기본 기능으로 `공통수학2 탐구보고서 응답`에 연결했다.
-- 변경 파일: `README.md`, `PROGRESS.md`, `app/[unitId]/[subunitId]/[topicId]/page.tsx`, `components/report-form-button.tsx` 신규, `lib/report-form.ts` 신규, `scripts/check-report-form.mjs` 신규, `scripts/check-curriculum.mjs`, `scripts/check-export.mjs`.
-- 실행한 검사와 실제 결과: 실제 폼 설정을 반영한 뒤 `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint`가 종료 코드 0으로 통과했다. 43개 전체의 사전 입력값·정식 주소·한글 및 특수문자 인코딩·잘못된 설정 거부를 검사했다. `npm.cmd run build`는 최초 샌드박스에서 `spawn EPERM` 및 네이티브 모듈 로딩 제한으로 실패했고 제한 밖 재실행에서 통과했다. postbuild는 53개 사전 렌더링 경로, 정상 페이지 52개의 HTML+RSC 및 404, 시각자료 41개·예외 2개, 43개 상세 페이지마다 실제 보고서 링크 2개와 새 탭·인쇄 숨김 속성을 확인했다. oxfmt 최초 실행은 샌드박스의 `spawn EPERM`으로 실패했으며 제한 밖 재실행은 성공했고, 전체 `npm.cmd run format:check`도 통과했다. 익명 HTTP 요청에서 공개 폼이 로그인 화면으로 이동하지 않고 HTTP 200으로 열렸고 로컬 상세 페이지도 HTTP 200이었다.
-- 실제 응답 검증: 이름에 `연결 확인용 테스트`를 표시한 가상 응답 3건을 제출했다. `나의 생각`을 비웠을 때 필수 오류가 나타났고, 선택 문항을 비워도 제출되며, 같은 학번의 반복 제출은 새 행으로 저장됐다. 타임스탬프와 답변의 11열 대응, 줄바꿈·특수문자, `00101`·`00102` 학번의 앞자리 0 보존을 원본 및 보기 시트에서 확인했다. 마지막 3번째 응답은 보기 시트 생성 후 제출하여 날짜 형식과 행 추가가 자동 유지되는지 확인했다. 실제 학생 응답은 사용하지 않았고 테스트 응답은 삭제하지 않았다.
-- 발견 / 수정한 문제: Google Forms가 새 응답 행의 날짜 서식을 기본 `DATE_TIME`으로 덮어써 원본 열의 사용자 지정 형식만으로는 지속 유지되지 않았다. 지역 설정 변경 시도는 전체 날짜·숫자 표시에 영향을 주는 요청 밖 변경이라는 이유로 자동 승인 검토에서 거절되어 적용하지 않았다. 한국 지역(`ko_KR`)과 `Asia/Seoul`을 유지하고 같은 파일의 첫 탭 `보고서 보기`에 원본 11열을 자동 표시하는 수식을 추가해 `yyyy-MM-dd HH:mm:ss`를 유지했다. 원본 `설문지 응답 시트1`은 Forms의 저장 대상 그대로다. 보기 탭은 현재 응답 19,999건을 표시할 행을 확보했다. 스프레드시트 권한은 `ksan0213@seocho.sen.hs.kr` 소유자만 있고 공유되지 않았음을 확인했다.
-- 작성 링크: [공통수학2 탐구보고서](https://docs.google.com/forms/d/e/1FAIpQLSfAaihsVvH1jm56RMu6isd85Jz_z1_-ty_zB-WoQnlZj7LKlw/viewform).
-- 관리 링크: [구글폼 수정](https://docs.google.com/forms/d/1f4hKUoWHWL21dx7jv0avyZswiRNdIRHxxB4Ar0X3qNY/edit).
-- 응답 링크: [공통수학2 탐구보고서 응답 — 보고서 보기](https://docs.google.com/spreadsheets/d/1z0edoFnRAj02wHiLibB6V7J9QJhU_7SawtRye12inyI/edit?gid=1069028059#gid=1069028059).
-- 연결 식별자: 단원 `entry.12164861`, 주제 `entry.64204507`, 링크 `entry.1237976543`. 원본 시트 ID `693075112`, 보기 시트 ID `1069028059`. 재개 시 기존 파일을 확인하며 폼·시트를 중복 생성하지 않는다.
-- 남은 작업과 다음 모델이 확인할 것: 사이트 화면의 직접 조작·모바일·인쇄·스크린리더 검증은 실행하지 않았으며 정적 산출물 검사와 구글폼 실제 제출 검증을 구분한다. 사이트 배포·커밋·푸시는 사용자 별도 요청 전까지 하지 않는다. 응답 확인은 날짜 형식을 유지하는 `보고서 보기`를 사용하며, 19,999건을 넘으면 보기 탭의 행을 확장한다. 테스트 응답 3건은 식별 가능한 상태로 남아 있다. 기존 시각자료 미검증 목록은 이번 요청 범위 밖이므로 유지한다.
+- 요청: npm run dev.
+- 수행한 작업: apps/fun-propositions에서 개발 서버 실행 명령을 호출하고 localhost:4174의 HTTP 200 응답을 확인했다.
+- 변경 파일: PROGRESS.md, 기록 로테이션 대상 docs/log/2026-09.md.
+- 실행한 검사와 실제 결과: 로컬 HTTP 요청 200. 애플리케이션 코드 변경이 없어 코드 검사는 생략했다. 실행 명령 출력은 유실되어 빌드 성공 여부는 별도로 판정하지 않았다.
+- 발견 / 수정한 문제: 없음.
+- 남은 작업과 다음 모델이 확인할 것: 브라우저에서 확인 가능. 커밋·푸시·배포 미실행.
 
-#### 2026-09-09 11:25 KST — Codex
+#### 2026-09-10 14:30 KST — Codex
 
-- 요청: `Research-on-Common-Mathematics2`의 현재 변경사항을 커밋하고 원격 저장소에 푸시.
-- 수행한 작업: 스테이징된 후속 수정과 협업 문서를 검토하고 필수 검사 및 추가 포맷 검사를 실행했다. 포맷 검사에서 발견된 `CLAUDE.md` 한 파일을 oxfmt로 정리한 뒤 전체 변경을 `main`에 커밋하고 `origin/main`에 푸시했다.
-- 변경 파일: `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `app/globals.css`, `components/visuals/activity.tsx`, `components/visuals/diagrams.tsx`, `lib/topic-visuals.ts`, `lib/visuals/geometry.ts`, `lib/visuals/logic.ts`, `lib/visuals/types.ts`, `package.json`, `scripts/check-export.mjs`, `scripts/check-visuals.mjs`.
-- 실행한 검사와 실제 결과: `git diff --cached --check` 통과. `npm.cmd run check`, `npx.cmd tsc --noEmit --incremental false`, `npm.cmd run lint` 통과. `npm.cmd run format:check`는 최초 샌드박스에서 `spawn EPERM`, 제한 밖 재실행에서 `CLAUDE.md` 포맷 문제로 실패했고 파일 정리 후 재실행해 통과. `npm.cmd run build`는 최초 샌드박스에서 `spawn EPERM` 및 네이티브 모듈 로딩 제한으로 실패했고 제한 밖 재실행에서 production build와 postbuild 모두 통과했다.
-- 발견 / 수정한 문제: `CLAUDE.md`의 프로젝트 포맷 규칙 불일치와 닫히지 않은 예시 코드 블록을 수정했다. 빌드의 최초 실패는 코드 결함이 아니라 샌드박스 하위 프로세스 제한이었음을 재실행으로 확인했다.
-- 남은 작업과 다음 모델이 확인할 것: `self-inverse`의 x=0 제외 동작, 버스 환승 정류장 마름모 표시, `wifi-coverage` 스크린리더 설명은 브라우저/보조기술로 직접 확인하지 않았다.
+- 요청: 첫 화면의 `FIFTEEN MATHEMATICAL DISCOVERIES` 문구 삭제.
+- 수행한 작업: intro 영역에서 영문 eyebrow만 제거하고 제목·설명·레이아웃은 유지했다.
+- 변경 파일: `apps/fun-propositions/src/app.js`, `PROGRESS.md`.
+- 실행한 검사와 실제 결과: 별도 앱 `npm run build`와 `git diff --check` 통과.
+- 발견 / 수정한 문제: 없음.
+- 남은 작업과 다음 모델이 확인할 것: 실제 브라우저 화면 검사는 실행하지 않았다. 커밋·푸시·배포 미실행.
 
-#### 2026-09-09 09:21 KST — Codex
+#### 2026-09-10 14:24 KST — Codex
 
-- 요청과 수행 내용: 별도 자동화 없이 Codex와 Claude Code가 매 작업 시작 전에 `PROGRESS.md`와 Git 상태를 확인하고, 종료 전에 실제 작업·검사 결과를 다시 기록하도록 협업 지침을 작성했다.
-- 변경 파일: `AGENTS.md` 신규, `CLAUDE.md` 신규, `PROGRESS.md` 협업 섹션 추가.
-- 실행한 검사: `Get-ChildItem`과 `rg`로 세 파일명, 작업 전 읽기·작업 후 기록 지침, `@AGENTS.md` 가져오기, Markdown 제목 구조를 확인했다. `git diff --check`는 종료 코드 0으로 통과했다. 애플리케이션 코드를 변경하지 않았으므로 앱 검사와 빌드는 실행하지 않았다.
-- 발견하거나 해결한 문제: 기존 상세 체크포인트의 Git 상태는 과거 작업 당시의 기록이며 현재 저장소와 다를 수 있다. 최신 협업 상태와 실제 저장소를 우선하도록 명시했다.
-- 남은 작업: Claude Code에서 `/memory`로 `CLAUDE.md`와 가져온 `AGENTS.md`의 실제 로드 여부를 확인하고 이번 문서 변경을 독립 검증한다. `/memory`는 Claude Code 세션 안에서 실행해야 하므로 Codex에서는 실행하지 않았다.
+- 요청: 브라우저 주석으로 지정한 파트 설명·개수 3개, 상단 숫자 15와 보조 문장 13개를 삭제하고 홀수 합 제목을 “홀수를 더하면 제곱수이다?”로 변경.
+- 수행한 작업: section-meta와 note-number 표시를 제거하고 선택한 원고 식별번호 1·2·3·4·6·8·9·10·11·12·13·14·19의 카드 보조 문장을 렌더링에서 제외했다. 선택하지 않은 화면 06·15의 문장은 유지했다. 04번 카드·상세·브라우저 제목을 요청 문구로 통일하고 보조 문장이 없는 카드의 제목 아래 간격을 정리했다. 과거 원고 파일은 보존했다. 최근 기록 11개 중 가장 오래된 2026-09-09 11:25 기록을 수정 없이 월별 로그 최상단으로 이동했다.
+- 변경 파일: apps/fun-propositions/src/app.js, apps/fun-propositions/src/style.css, PROGRESS.md, docs/log/2026-09.md.
+- 실행한 검사와 실제 결과: npm run check, npx tsc --noEmit --incremental false, npm run lint 통과. 별도 앱 npm run build, node --check src/app.js, 변경 코드 oxfmt 및 git diff --check 통과. 사용자 주석 대상과 렌더링 코드를 대조했다.
+- 발견 / 수정한 문제: 보조 문장을 없애면 카드 제목과 아래 구분선 사이 간격이 사라져 해당 카드에만 간격을 추가했다. 제목은 제공 원문의 변경 없이 화면 표시만 맞췄다.
+- 남은 작업과 다음 모델이 확인할 것: 표시·문구 변경이므로 새 테스트를 작성하지 않았다. 기존 사이트 빌드는 빌드 설정·의존성·라우팅 변경이 없어 생략했다. 브라우저 직접 조작·시각 QA는 실행하지 않았다. 원문 및 남은 주제 구성·활동은 유지한다. 커밋·푸시·배포 미실행.
+
+#### 2026-09-10 14:21 KST — Codex
+
+- 요청: 번호를 건너뛰지 말고 연속으로 붙이기.
+- 수행한 작업: 기존 목록 순서에서 화면 번호를 계산해 카드·좌측 명제 목록·상세 번호·브라우저 제목을 01~~15로 통일했다. PART 01은 01~~05, PART 02는 06~14, PART 03은 15로 표시하며 기존 세 파트와 주제·본문·활동을 유지했다. 참고 원고 식별번호와 기존 상세 링크는 유지한다. 최근 기록이 11개가 되어 가장 오래된 2026-09-09 09:21 기록을 내용 수정 없이 docs/log/2026-09.md로 이동했다.
+- 변경 파일: apps/fun-propositions/src/app.js, apps/fun-propositions/README.md, PROGRESS.md, docs/log/2026-09.md.
+- 실행한 검사와 실제 결과: npm run check, npx tsc --noEmit --incremental false, npm run lint 통과. 별도 앱 npm run build 통과. 표시 번호를 사용하는 네 위치와 README의 파트 번호 범위를 읽어 확인했다. git diff --check 통과.
+- 발견 / 수정한 문제: 이전 작업은 삭제 전 번호를 화면에 그대로 표시했으므로 현재 목록 순서와 화면 번호를 일치시켰다. 주제 식별번호에 의존하는 활동·메타데이터 연결은 보존했다.
+- 남은 작업과 다음 모델이 확인할 것: 화면 표시만 바꾼 변경으로 새 테스트를 작성하지 않았다. 기존 사이트 빌드는 빌드 설정·의존성·라우팅 변경이 없어 생략했다. 실제 브라우저 조작·스크린리더 검사는 실행하지 않았다. 다음 요청에서 화면 번호 05는 자릿수 재배열, 14는 비비아니 정리, 15는 이발사의 역설이다. 커밋·푸시·배포 미실행.
+
+#### 2026-09-10 14:18 KST — Codex
+
+- 요청: PART 01 간단한 명제, PART 02 조금 더 멀리, 수학의 확장, PART 03 특별 탐구로만 분류. 기존 1~~6은 PART 01, 7~~19는 PART 02, 20은 PART 03에 두고 05·15·16·17·18은 삭제.
+- 수행한 작업: 기존 번호를 유지한 활성 명제 15개를 5·9·1개로 분류했다. 빌드 데이터에서 요청한 다섯 항목을 제외하고 남은 명제만 카드·목록·상세 화면에 표시한다. 네 번째 파트를 제거하고 제목·총수·메타데이터를 맞췄다. 이전/다음 링크를 연속 번호 계산에서 실제 목록 순서로 변경해 04↔06, 14↔19, 19↔20 이동을 연결했다. 제외한 체스판 활동 코드를 제거했다. 남은 명제 원고와 활동은 보존했다.
+- 변경 파일: apps/fun-propositions/src/catalog.js, src/app.js, src/index.html, scripts/content.mjs, scripts/build.mjs, scripts/check.mjs, README.md, PROGRESS.md. 원문 두 파일은 참고 자료로 보존하며 앱 산출물에는 활성 15개만 포함한다.
+- 실행한 검사와 실제 결과: 앱 npm run check·build, src/app.js 문법 검사 통과. 기존 사이트 npm run check, npx tsc --noEmit --incremental false, npm run lint, npm run build+postbuild 통과(53개 사전 렌더링, 정상 정적 페이지 52개, 시각자료 41개, 보고서 연결 43개). 로컬 HTTP 데이터에서 정확한 활성 번호 15개, 세 파트 제목, 5/9/1 배정을 별도 assertion으로 확인했다. 변경 코드 oxfmt 및 git diff --check 통과.
+- 발견 / 수정한 문제: 삭제 후에도 id±1로 이동하면 제외된 명제로 향하므로 실제 목록의 앞뒤 항목으로 교체했다. 범위 끝-시작+1은 삭제 항목까지 세므로 활성 항목 수를 사용했다. 삭제된 번호의 직접 링크는 기존 미일치 처리에 따라 전체 목록을 보여준다.
+- 남은 작업과 다음 모델이 확인할 것: 실제 브라우저 조작·화면·스크린리더 검사는 요청되지 않아 실행하지 않았다. 분류만 우선 반영했으며 남은 풀이·분석 활동은 재설계하지 않았다. 원본 번호 유지, 삭제 번호 제외 및 PART 03의 20번을 이후 변경에서도 보존한다. 커밋·푸시·배포·기존 사이트 연결 미실행.
+
+#### 2026-09-10 13:25 KST — Codex
+
+- 요청: 이발사의 역설 설명 파트를 포함하여 명제 8개를 추가하고 나머지 7개는 적절히 선정.
+- 수행한 작업: 13 홀수 제곱의 8 나머지, 14 연속 세 정수 곱의 6 배수, 15 두 제곱수 차의 반례, 16 고정 둘레 직사각형의 최대 넓이, 17 격자점 5개의 중점, 18 √2의 무리수성, 19 정삼각형 내부 거리 합(비비아니 정리), 20 이발사의 역설을 추가했다. 추가 원고를 기존 원문과 분리하고 총 20개를 6·6·7·1의 네 파트로 구성했다. 모든 새 항목에 역방향 발문과 정방향 확인을 넣고 상세 이동·수량·메타데이터·모바일 및 긴 탐색 목록을 조정했다. 이발사의 역설은 세 가지 선택을 제공하고 양방향 규칙, 자기 포함, 두 경우의 모순과 존재 명제의 거짓을 설명한다.
+- 변경 파일: apps/fun-propositions/content/additional-propositions.md 신규, src/catalog.js 신규, src/app.js, src/style.css, src/index.html, scripts/content.mjs, scripts/build.mjs, scripts/check.mjs, README.md, PROGRESS.md. 이전 미커밋 작업과 기존 content/propositions.md를 보존했다.
+- 실행한 검사와 실제 결과: 별도 앱 npm run check·build 통과. 기존 원문 12개 보존, 전체 20개·판정·조건·메타데이터·파트 배정·새 분석/증명 필드·수식, 이발사 자기 적용 진리값 2가지, 홀짝·배수·제곱차·넓이의 수치 교차검산과 기존 입력 검사를 수행했다. 기존 사이트 npm run check, npx tsc --noEmit --incremental false, npm run lint, npm run build+postbuild 통과(53개 사전 렌더링, 정상 페이지 52개, 시각자료 41개 및 보고서 연결 43개). 앱 소스 문법 검사, 첨부 원문과 보존 파일 바이트 일치, 실제 로컬 데이터 20개·역설 유형 및 앱·수식 글꼴 자산 HTTP 200 확인. 새 작성 파일 oxfmt 통과. git diff --check 통과.
+- 발견 / 수정한 문제: “스스로 깎지 않는 사람만 깎아준다”만으로는 역설이 성립하지 않으므로 모든 해당 주민을 반드시 깎아준다는 반대 방향과 이발사 자신도 대상이라는 조건을 명시했다. 총수 12·두 파트에 고정된 화면과 검사를 확장하고 긴 명제 목록이 화면 밖으로 잘리지 않도록 스크롤을 적용했다. 제곱의 차에 관한 용어를 정정했다. 최초 웹 검색은 연결 실패했으나 MathWorld의 이발사 역설 및 비비아니 정리 페이지 직접 열기에 성공하여 정의를 대조했다.
+- 남은 작업과 다음 모델이 확인할 것: 수치 검사는 일반 증명을 대신하지 않으며 일반 논증은 수동 검토했다. 실제 브라우저 선택·풀이 펼치기·이전/다음·모바일·스크린리더·Claude Code 독립 검증은 실행하지 않았다. 새 8개에 분석 발문을 추가했으며 기존 12개의 활동을 재설계하지 않았다. 공개 배포·기존 사이트 연결·커밋·푸시 미실행.
+
+#### 2026-09-10 12:48 KST — Codex
+
+- 요청: 학생이 결과에서 출발점으로 거꾸로 이르는 분석적 증명 활동을 구상하기 전에, 12개 명제의 적용 가능성을 검증하고 가능한 명제를 안내.
+- 수행한 작업: 원문의 조건·판정·논증을 재검토하고 각 명제의 결론을 보장할 충분한 근거와 정방향 논증을 확인했다. 참인 1·4·6·7·8·9·10·11·12번은 분석 후 증명 가능, 거짓인 2·3·5번은 부정을 증명하는 반박 활동으로 분류했다. 분석적 발문의 명확성을 기준으로 4·6·9·10·11번을 우선 추천한다. 이는 수학적 구조에 대한 판단이며 학생 대상 효과 검증은 아니다.
+- 변경 파일: PROGRESS.md만 갱신. 기존 미커밋 웹앱 파일과 원문을 보존하고 앱은 수정하지 않았다.
+- 실행한 검사와 실제 결과: 원문·Git 상태·관련 diff 읽기와 수학적 수동 검토, Texas 대학 공개 논리 교육 자료의 역방향 탐색과 정방향 증명 구분 확인. 코드 변경이 없으므로 check·tsc·lint·build·브라우저 검사는 실행하지 않았다. 이전 세션 성공 결과를 이번 세션 검사로 주장하지 않는다.
+- 발견 / 수정한 문제: 원명제가 거짓인 세 항목은 참으로 증명할 수 없다. 결론에서 이미 참인 명제를 도출하는 것만으로 원래 결론이 증명되지는 않는다. 10번의 같은 작은 정사각형에 속하기와 11번의 홀수 부분이 같기는 결론을 보장하는 충분조건이며 필요조건으로 취급하면 안 된다. 1번은 무한소수의 의미, 7·8번은 모든 경우의 처리, 12번은 연속성과 끝점의 온도 차이가 0인 경우를 보장해야 한다.
+- 남은 작업과 다음 모델이 확인할 것: 실제 활동 설계·앱 수정은 이번 요청 범위가 아니다. 4·6·9·10·11번의 분석→근거 도달→정방향 증명 흐름을 우선 설계하고, 2·3·5번은 반박 활동으로 명확히 표시한다. 학생 대상·브라우저·독립 검증 및 커밋·푸시·배포 미실행.
 
 > 아래 내용은 기존 구현의 상세 체크포인트다. 여기에 기록된 Git 상태와 검사 결과는 작성 당시의 스냅샷이며, 현재 상태는 위 협업 상태와 실제 저장소를 기준으로 판단한다.
 

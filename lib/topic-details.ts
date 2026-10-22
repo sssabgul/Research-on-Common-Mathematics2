@@ -2,12 +2,14 @@
 import { geometryDetails } from './details/geometry.ts';
 import { logicDetails } from './details/logic.ts';
 import { functionDetails } from './details/functions.ts';
+import { foundationDetails } from './details/foundations.ts';
 import type { DetailMap } from './details/types.ts';
 
 export const topicDetails: DetailMap = {
   ...geometryDetails,
   ...logicDetails,
   ...functionDetails,
+  ...foundationDetails,
 };
 export function findTopicDetail(
   unitId: string,
